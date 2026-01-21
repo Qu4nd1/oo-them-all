@@ -27,17 +27,26 @@ namespace SimulationBancomat
             };
 
             Presentation();
+            Thread.Sleep(5000);
+            Console.Clear();
+
             passwordValidity = VerifyCode(passwordValidity, password);
             
+            if (passwordValidity == true)
+            {
+                MenuChoice(bancomatOptions);
+            }
+            
+
             Console.ReadLine();
         }
 
         static void Presentation()
         {
-            string title = "";
-            Console.Write(title);
-
-
+            string title = "Raiffeisen Banque";
+            Console.WriteLine($"\n\t\t{title}\n\n");
+            Console.WriteLine("\tBienvenue à la banque Raiffeisen");
+            Console.WriteLine("===============================================================");
         }
 
         static bool VerifyCode(bool crtPasswordValidity, int crtPassword)
@@ -114,7 +123,7 @@ namespace SimulationBancomat
                                 Console.CursorVisible = false;
                                 Thread.Sleep(1000);
                                 Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 2);
-                                Console.WriteLine($"Temps restant a attendre {timeToWait - i}");
+                                Console.WriteLine($"Temps restant a attendre {timeToWait - i} ");
                             }
                             tryCounter = 0;
                             timeToWait = timeToWait * 2;
@@ -126,9 +135,16 @@ namespace SimulationBancomat
             return crtPasswordValidity;
         }
 
-        static void MenuChoice()
+        static void MenuChoice(string[] crtBancomatOptions)
         {
-            
+            Console.Clear();
+            Presentation();
+
+            Console.WriteLine("Veuillez choisir l'action désirer !\n");
+            for (int i = 0; i < crtBancomatOptions.Length; i++)
+            {
+                Console.WriteLine($"\t{i+1}. {crtBancomatOptions[i]}");
+            }
         }
 
         static void Menu()
