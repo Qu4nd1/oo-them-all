@@ -202,8 +202,8 @@ namespace SimulationBancomat
                 if (char.IsDigit(keyChar))
                 {
                     input += keyChar;
-                    DrawAtString((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, input);  // Afficher la valeur puis
-                    Thread.Sleep(1000);
+                    DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
+                    Thread.Sleep(500);
                     DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*');
                 }
                 else
