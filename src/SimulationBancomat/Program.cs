@@ -1,24 +1,46 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SimulationBancomat
 {
     class Program
     {
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        public static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
+
+        struct PasswordData
+        {
+            public bool passwordValidity;
+            public int password;
+            public int tempPassword;
+            public const int PASSWORD_SCREEN_X = 40;
+            public const int PASSWORD_SCREEN_Y = 16;
+            public const int PASSWORD_LENGTH = 6;
+
+            // Constructeur
+            public PasswordData(bool validity, int pwd, int tempPwd)
+            {
+                passwordValidity = validity;
+                password = pwd;
+                tempPassword = tempPwd;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            bool passwordValidity = false;
-            int password = 123456;
+            PasswordData data = new PasswordData(false, 123456, 0);
+
             string[] emptyButton = new string[]
-                {
-                "┌───┐", 
+            {
+                "┌───┐",
                 "│   │",
                 "└───┘"
-                };
+            };
 
             string[] bancomatOptions = new string[]
             {
@@ -36,86 +58,57 @@ namespace SimulationBancomat
 
             DrawNumPad(emptyButton);
 
-            //passwordValidity = VerifyCode(passwordValidity, password);
-            
-            if (passwordValidity == true)
+            data.passwordValidity = VerifyCode(ref data);
+
+            if (data.passwordValidity == true)
             {
                 MenuChoice(bancomatOptions);
             }
-            
 
             Console.ReadLine();
         }
 
         static void DrawNumPad(string[] emptyButton)
         {
-            
-            int buttonX = 19;
-            int buttonY = 11;
-            const int SCREEN_X = 15;
-            const int SCREEN_Y = 6;
-            const int PASSWORD_SCREEN_X = 20;
-            const int PASSWORD_SCREEN_Y = 7;
-            const int PASSWORD_LENGTH = 6;
+            int initialButtonX = PasswordData.PASSWORD_SCREEN_X - 1;
+            int initalButtonY = PasswordData.PASSWORD_SCREEN_Y + 3;
+            int buttonX = initialButtonX;
+            int buttonY = initalButtonY;
+            int SCREEN_X = PasswordData.PASSWORD_SCREEN_X - 5;
+            int SCREEN_Y = PasswordData.PASSWORD_SCREEN_Y - 1;
             const int HORIZONTAL_SPACE = 7;
             const int VERTICAL_SPACE = 4;
 
             Console.CursorVisible = false;
 
-            DrawScreen(SCREEN_X, SCREEN_Y, 27,21);
-            DrawScreen(PASSWORD_SCREEN_X, PASSWORD_SCREEN_Y, 17,3);
+            DrawScreen(SCREEN_X, SCREEN_Y, 27, 21);
+            DrawScreen(PasswordData.PASSWORD_SCREEN_X, PasswordData.PASSWORD_SCREEN_Y, 17, 3);
 
-            for (int i = 0; i < PASSWORD_LENGTH; i++)
+            for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
             {
-                int passwordNumbersX = (PASSWORD_SCREEN_X + 3) + (i * 2);
-                DrawAtChar(passwordNumbersX, PASSWORD_SCREEN_Y + 1, '_');
+                int passwordNumbersX = (PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2);
+                DrawAtChar(passwordNumbersX, PasswordData.PASSWORD_SCREEN_Y + 1, '_');
             }
-            
+
             for (int i = 0; i < 10; i++)
             {
                 char padNumber = (char)('0' + ((i + 1) % 10));
 
                 if (i == 3 || i == 6 || i == 9)
                 {
-                    buttonX = 19;
+                    buttonX = initialButtonX;
                     buttonY += VERTICAL_SPACE;
                     if (i == 9)
                         buttonX += HORIZONTAL_SPACE;
                 }
-                   
 
-                if (i < 3)
-                {
-                    for (int j = 0; j < 3; j++)
-                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    buttonX += HORIZONTAL_SPACE;
-                }
-                else if (i < 6)
-                {
-                    for (int j = 0; j < 3; j++)
-                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    buttonX += HORIZONTAL_SPACE;
-                }
-                else if (i < 9)
-                {
-                    for (int j = 0; j < 3; j++)
-                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    buttonX += HORIZONTAL_SPACE;
-                }
-                else
-                {
-                    for (int j = 0; j < 3; j++)
-                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    buttonX += HORIZONTAL_SPACE;
-                }
+                for (int j = 0; j < 3; j++)
+                    DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                buttonX += HORIZONTAL_SPACE;
             }
-            
-            
         }
+
         static void DrawScreen(int x, int y, int width, int height)
         {
             // Ligne du haut
@@ -140,6 +133,7 @@ namespace SimulationBancomat
             Console.SetCursorPosition(x + width - 1, y + height - 1);
             Console.Write('┘');
         }
+
         static void DrawAtString(int x, int y, string character)
         {
             Console.SetCursorPosition(x, y);
@@ -170,104 +164,72 @@ namespace SimulationBancomat
             }
         }
 
-
         static void Presentation()
         {
-            string title = "Raiffeisen Banque";
-            Console.WriteLine($"\n\t\t{title}\n\n");
-            Console.WriteLine("\tBienvenue à la banque Raiffeisen");
+            Console.WriteLine(@"
+                                 ____    _    _   _  ___  _   _ _____ 
+                                | __ )  / \  | \ | |/ _ \| | | | ____|
+                                |  _ \ / _ \ |  \| | | | | | | |  _|  
+                                | |_) / ___ \| |\  | |_| | |_| | |___ 
+                                |____/_/   \_\_| \_|\__\_\\___/|_____|
+                                                      \_\
+
+                     ____      _    ___ _____ _____ _____ ___ ____  _____ _   _ 
+                    |  _ \    / \  |_ _|  ___|  ___| ____|_ _/ ___|| ____| \ | |
+                    | |_) |  / _ \  | || |_  | |_  |  _|  | |\___ \|  _| |  \| |
+                    |  _ <  / ___ \ | ||  _| |  _| | |___ | | ___) | |___| |\  |
+                    |_| \_\/_/   \_\___|_|   |_|   |_____|___|____/|_____|_| \_|
+");
+            Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 7, PasswordData.PASSWORD_SCREEN_Y - 2);
+            Console.WriteLine("Bienvenue à la banque Raiffeisen");
         }
 
-        static bool VerifyCode(bool crtPasswordValidity, int crtPassword)
+        static bool VerifyCode(ref PasswordData data)
         {
             Console.CursorVisible = true;
-            int tryCounter = 0;
-
-            const int QUESTION_POS_X = 3;
-            const int QUESTION_POS_Y = 5;
-
             int timeToWait = 10;
+            string input = " ";
+
+
+            for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
+            {
+                Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1);
+
+                ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
+                char keyChar = key.KeyChar;
+
+                // Vérifier si c'est un chiffre
+                if (char.IsDigit(keyChar))
+                {
+                    input += keyChar;
+                    DrawAtString((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, input);  // Afficher la valeur puis
+                    Thread.Sleep(1000);
+                    DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*');
+                }
+                else
+                {
+                    MessageBox(IntPtr.Zero, "Veuillez entrer uniquement des chiffres", "Entrée invalide", 48);
+                    i--;  // Recommencer cette position
+                }
+            }
+            // Après la boucle, vérifier le mot de passe complet
+            data.passwordValidity = int.TryParse(input, out data.password);
+            if (data.password == 123456)
+            {
+                data.passwordValidity = true;
+            }
+            else
+            {
+                data.passwordValidity = false;
+                MessageBox(IntPtr.Zero, "Code incorrect", "Erreur", 16);
+            }
             
-            do
-            { 
-                Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y);
-                Console.Write("Veuillez saisir votre PIN (6 chiffres) : ");
-
-                crtPasswordValidity = int.TryParse(Console.ReadLine(), out crtPassword);
-                if (crtPasswordValidity == false)
-                {
-                    Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 1);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("PIN INCORRECT");
-                    
-                    tryCounter++;
-
-                    Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 2);
-                    Console.WriteLine($"Il vous reste {3 - tryCounter} chance avant un blockage temporaire des essais");
-                    Console.ResetColor();
-
-                    Thread.Sleep(2000);
-                    Console.Clear();
-
-                    if (tryCounter >= 3)
-                    {
-                        Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 1);
-                        Console.WriteLine("Veuillez patienter avant de réessayer");
-                        for (int i = 0; i < timeToWait; i++)
-                        {
-                            Console.CursorVisible = false;
-                            Thread.Sleep(1000);
-                            Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 2);
-                            Console.WriteLine($"Temps restant a attendre {timeToWait - i} ");
-                        }
-                        tryCounter = 0;
-                        timeToWait = timeToWait * 2;
-                        Console.Clear();
-                    }
-                    
-                }
-                if (crtPasswordValidity == true)
-                {
-                    if (crtPassword != 123456)
-                    {
-                        Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 1);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("PIN INCORRECT");
-
-                        crtPasswordValidity = false;
-                        tryCounter++;
-
-                        Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 2);
-                        Console.WriteLine($"Il vous reste {3 - tryCounter} chance avant un blockage temporaire des essais");
-                        Console.ResetColor();
-                        Thread.Sleep(2000);
-                        Console.Clear();
-
-                        if (tryCounter >= 3)
-                        {
-                            Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 1);
-                            Console.WriteLine("Veuillez patienter avant de réessayer");
-                            for (int i = 0; i < timeToWait; i++)
-                            {
-                                Console.CursorVisible = false;
-                                Thread.Sleep(1000);
-                                Console.SetCursorPosition(QUESTION_POS_X, QUESTION_POS_Y + 2);
-                                Console.WriteLine($"Temps restant a attendre {timeToWait - i} ");
-                            }
-                            tryCounter = 0;
-                            timeToWait = timeToWait * 2;
-                            Console.Clear();
-                        }
-                    }
-                }
-            } while (crtPasswordValidity == false);
-            return crtPasswordValidity;
+            return data.passwordValidity;
         }
 
         static void MenuChoice(string[] crtBancomatOptions)
         {
             Console.Clear();
-            Presentation();
 
             Console.WriteLine("Veuillez choisir l'action désirer !\n");
             for (int i = 0; i < crtBancomatOptions.Length; i++)
@@ -275,7 +237,7 @@ namespace SimulationBancomat
                 Console.WriteLine($"\t{i+1}. {crtBancomatOptions[i]}");
             }
         }
-
+        
         static void Menu()
         {
 
