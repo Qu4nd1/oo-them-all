@@ -13,6 +13,12 @@ namespace SimulationBancomat
         {
             bool passwordValidity = false;
             int password = 123456;
+            string[] emptyButton = new string[]
+                {
+                "┌───┐", 
+                "│   │",
+                "└───┘"
+                };
 
             string[] bancomatOptions = new string[]
             {
@@ -27,10 +33,10 @@ namespace SimulationBancomat
             };
 
             Presentation();
-            Thread.Sleep(5000);
-            Console.Clear();
 
-            passwordValidity = VerifyCode(passwordValidity, password);
+            DrawNumPad(emptyButton);
+
+            //passwordValidity = VerifyCode(passwordValidity, password);
             
             if (passwordValidity == true)
             {
@@ -41,12 +47,135 @@ namespace SimulationBancomat
             Console.ReadLine();
         }
 
+        static void DrawNumPad(string[] emptyButton)
+        {
+            
+            int buttonX = 19;
+            int buttonY = 11;
+            const int SCREEN_X = 15;
+            const int SCREEN_Y = 6;
+            const int PASSWORD_SCREEN_X = 20;
+            const int PASSWORD_SCREEN_Y = 7;
+            const int PASSWORD_LENGTH = 6;
+            const int HORIZONTAL_SPACE = 7;
+            const int VERTICAL_SPACE = 4;
+
+            Console.CursorVisible = false;
+
+            DrawScreen(SCREEN_X, SCREEN_Y, 27,21);
+            DrawScreen(PASSWORD_SCREEN_X, PASSWORD_SCREEN_Y, 17,3);
+
+            for (int i = 0; i < PASSWORD_LENGTH; i++)
+            {
+                int passwordNumbersX = (PASSWORD_SCREEN_X + 3) + (i * 2);
+                DrawAtChar(passwordNumbersX, PASSWORD_SCREEN_Y + 1, '_');
+            }
+            
+            for (int i = 0; i < 10; i++)
+            {
+                char padNumber = (char)('0' + ((i + 1) % 10));
+
+                if (i == 3 || i == 6 || i == 9)
+                {
+                    buttonX = 19;
+                    buttonY += VERTICAL_SPACE;
+                    if (i == 9)
+                        buttonX += HORIZONTAL_SPACE;
+                }
+                   
+
+                if (i < 3)
+                {
+                    for (int j = 0; j < 3; j++)
+                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                    buttonX += HORIZONTAL_SPACE;
+                }
+                else if (i < 6)
+                {
+                    for (int j = 0; j < 3; j++)
+                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                    buttonX += HORIZONTAL_SPACE;
+                }
+                else if (i < 9)
+                {
+                    for (int j = 0; j < 3; j++)
+                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                    buttonX += HORIZONTAL_SPACE;
+                }
+                else
+                {
+                    for (int j = 0; j < 3; j++)
+                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                    buttonX += HORIZONTAL_SPACE;
+                }
+            }
+            
+            
+        }
+        static void DrawScreen(int x, int y, int width, int height)
+        {
+            // Ligne du haut
+            DrawHorizontalLine(x, y, width, '─');
+
+            // Ligne du bas
+            DrawHorizontalLine(x, y + height - 1, width, '─');
+
+            // Côté gauche
+            DrawVerticalLine(x, y, height, '│');
+
+            // Côté droit
+            DrawVerticalLine(x + width - 1, y, height, '│');
+
+            // Coins
+            Console.SetCursorPosition(x, y);
+            Console.Write('┌');
+            Console.SetCursorPosition(x + width - 1, y);
+            Console.Write('┐');
+            Console.SetCursorPosition(x, y + height - 1);
+            Console.Write('└');
+            Console.SetCursorPosition(x + width - 1, y + height - 1);
+            Console.Write('┘');
+        }
+        static void DrawAtString(int x, int y, string character)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write(character);
+        }
+
+        static void DrawAtChar(int x, int y, char character)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write(character);
+        }
+
+        static void DrawHorizontalLine(int startX, int y, int length, char character)
+        {
+            for (int x = startX; x < startX + length; x++)
+            {
+                Console.SetCursorPosition(x, y);
+                Console.Write(character);
+            }
+        }
+
+        static void DrawVerticalLine(int x, int startY, int length, char character)
+        {
+            for (int y = startY; y < startY + length; y++)
+            {
+                Console.SetCursorPosition(x, y);
+                Console.Write(character);
+            }
+        }
+
+
         static void Presentation()
         {
             string title = "Raiffeisen Banque";
             Console.WriteLine($"\n\t\t{title}\n\n");
             Console.WriteLine("\tBienvenue à la banque Raiffeisen");
-            Console.WriteLine("===============================================================");
         }
 
         static bool VerifyCode(bool crtPasswordValidity, int crtPassword)
