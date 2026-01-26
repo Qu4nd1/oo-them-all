@@ -42,6 +42,8 @@ namespace SimulationBancomat
                 "└───┘"
             };
 
+            char keyChar = ' ';
+
             string[] bancomatOptions = new string[]
             {
                 "Retirer de l'argent",
@@ -56,9 +58,9 @@ namespace SimulationBancomat
 
             Presentation();
 
-            DrawNumPad(emptyButton);
+            DrawNumPad(emptyButton, keyChar);
 
-            data.passwordValidity = VerifyCode(ref data);
+            data.passwordValidity = VerifyCode(ref data, emptyButton, keyChar);
 
             if (data.passwordValidity == true)
             {
@@ -68,7 +70,7 @@ namespace SimulationBancomat
             Console.ReadLine();
         }
 
-        static void DrawNumPad(string[] emptyButton)
+        static void DrawNumPad(string[] emptyButton, char keyChar)
         {
             int initialButtonX = PasswordData.PASSWORD_SCREEN_X - 1;
             int initalButtonY = PasswordData.PASSWORD_SCREEN_Y + 3;
@@ -101,11 +103,23 @@ namespace SimulationBancomat
                     if (i == 9)
                         buttonX += HORIZONTAL_SPACE;
                 }
-
-                for (int j = 0; j < 3; j++)
-                    DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                buttonX += HORIZONTAL_SPACE;
+                if (keyChar == padNumber)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.White;
+                    for (int j = 0; j < 3; j++)
+                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                    buttonX += HORIZONTAL_SPACE;
+                    Console.ResetColor();
+                }
+                else
+                {
+                    for (int j = 0; j < 3; j++)
+                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                    buttonX += HORIZONTAL_SPACE;
+                }
             }
         }
 
@@ -184,45 +198,56 @@ namespace SimulationBancomat
             Console.WriteLine("Bienvenue à la banque Raiffeisen");
         }
 
-        static bool VerifyCode(ref PasswordData data)
+        static bool VerifyCode(ref PasswordData data, string[] emptyButton, char keyChar)
         {
             Console.CursorVisible = true;
             int timeToWait = 10;
             string input = " ";
 
-
-            for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
+            do
             {
-                Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1);
-
-                ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
-                char keyChar = key.KeyChar;
-
-                // Vérifier si c'est un chiffre
-                if (char.IsDigit(keyChar))
+                for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
                 {
-                    input += keyChar;
-                    DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
-                    Thread.Sleep(500);
-                    DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*');
+                    Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1);
+
+                    ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
+                    keyChar = key.KeyChar;
+
+                    // Vérifier si c'est un chiffre
+                    if (char.IsDigit(keyChar))
+                    {
+                        input += keyChar;
+                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
+                        DrawNumPad(emptyButton,keyChar);
+                        Thread.Sleep(50);
+                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*');
+                    }
+                    else
+                    {
+                        MessageBox(IntPtr.Zero, "Veuillez entrer uniquement des chiffres", "Entrée invalide", 48);
+                        i--;  // Recommencer cette position
+                    }
+                }
+                // Après la boucle, vérifier le mot de passe complet
+                data.passwordValidity = int.TryParse(input, out data.tempPassword);
+                if (data.tempPassword == data.password)
+                {
+                    data.passwordValidity = true;
                 }
                 else
                 {
-                    MessageBox(IntPtr.Zero, "Veuillez entrer uniquement des chiffres", "Entrée invalide", 48);
-                    i--;  // Recommencer cette position
+                    data.passwordValidity = false;
+                    input = "";
+                    data.tempPassword = 0;
+                    MessageBox(IntPtr.Zero, "Code incorrect", "Erreur", 16);
+
+                    for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
+                    {
+                        Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1);
+                        Console.Write("_");
+                    }
                 }
-            }
-            // Après la boucle, vérifier le mot de passe complet
-            data.passwordValidity = int.TryParse(input, out data.password);
-            if (data.password == 123456)
-            {
-                data.passwordValidity = true;
-            }
-            else
-            {
-                data.passwordValidity = false;
-                MessageBox(IntPtr.Zero, "Code incorrect", "Erreur", 16);
-            }
+            } while (data.passwordValidity == false);
             
             return data.passwordValidity;
         }
@@ -242,12 +267,6 @@ namespace SimulationBancomat
         {
 
         }
-
-        static void VerifyCode()
-        {
-
-        }
-        
         static void GetOutMoney()
         {
 
