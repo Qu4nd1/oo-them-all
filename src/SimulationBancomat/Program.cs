@@ -56,18 +56,21 @@ namespace SimulationBancomat
                 "Sans reçu"
             };
 
-            Presentation();
-
-            DrawNumPad(emptyButton, keyChar);
-
-            data.passwordValidity = VerifyCode(ref data, emptyButton, keyChar);
-
-            if (data.passwordValidity == true)
+            do
             {
-                MenuChoice(bancomatOptions);
-            }
+                Presentation();
+                PasswordVisualSuppression();
+                DrawNumPad(emptyButton, keyChar);
 
-            Console.ReadLine();
+                data.passwordValidity = VerifyCode(ref data, emptyButton, keyChar);
+
+                if (data.passwordValidity == true)
+                {
+                    MenuChoice(bancomatOptions);
+                }
+            } while (data.passwordValidity != true);
+
+                Console.ReadLine();
         }
 
         static void DrawNumPad(string[] emptyButton, char keyChar)
@@ -86,11 +89,6 @@ namespace SimulationBancomat
             DrawScreen(SCREEN_X, SCREEN_Y, 27, 21);
             DrawScreen(PasswordData.PASSWORD_SCREEN_X, PasswordData.PASSWORD_SCREEN_Y, 17, 3);
 
-            for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
-            {
-                int passwordNumbersX = (PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2);
-                DrawAtChar(passwordNumbersX, PasswordData.PASSWORD_SCREEN_Y + 1, '_');
-            }
 
             for (int i = 0; i < 10; i++)
             {
@@ -110,8 +108,12 @@ namespace SimulationBancomat
                     for (int j = 0; j < 3; j++)
                         DrawAtString(buttonX, buttonY + j, emptyButton[j]);
                     DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    buttonX += HORIZONTAL_SPACE;
                     Console.ResetColor();
+                    Thread.Sleep(50);
+                    for (int j = 0; j < 3; j++)
+                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
+                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
+                    buttonX += HORIZONTAL_SPACE;
                 }
                 else
                 {
@@ -178,6 +180,14 @@ namespace SimulationBancomat
             }
         }
 
+        static void PasswordVisualSuppression()
+        {
+            for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
+            {
+                int passwordNumbersX = (PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2);
+                DrawAtChar(passwordNumbersX, PasswordData.PASSWORD_SCREEN_Y + 1, '_');
+            }
+        }
         static void Presentation()
         {
             Console.WriteLine(@"
@@ -193,7 +203,7 @@ namespace SimulationBancomat
                     | |_) |  / _ \  | || |_  | |_  |  _|  | |\___ \|  _| |  \| |
                     |  _ <  / ___ \ | ||  _| |  _| | |___ | | ___) | |___| |\  |
                     |_| \_\/_/   \_\___|_|   |_|   |_____|___|____/|_____|_| \_|
-");
+            ");
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 7, PasswordData.PASSWORD_SCREEN_Y - 2);
             Console.WriteLine("Bienvenue à la banque Raiffeisen");
         }
@@ -201,7 +211,6 @@ namespace SimulationBancomat
         static bool VerifyCode(ref PasswordData data, string[] emptyButton, char keyChar)
         {
             Console.CursorVisible = true;
-            int timeToWait = 10;
             string input = " ";
 
             do
@@ -220,7 +229,7 @@ namespace SimulationBancomat
                         DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
                         DrawNumPad(emptyButton,keyChar);
                         Thread.Sleep(50);
-                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*');
+                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*'); // Affichage des numéros entrés
                     }
                     else
                     {
@@ -254,6 +263,8 @@ namespace SimulationBancomat
 
         static void MenuChoice(string[] crtBancomatOptions)
         {
+            char keyChar;
+            bool keyValidity = false;
             Console.Clear();
 
             Console.WriteLine("Veuillez choisir l'action désirer !\n");
@@ -261,6 +272,30 @@ namespace SimulationBancomat
             {
                 Console.WriteLine($"\t{i+1}. {crtBancomatOptions[i]}");
             }
+            do
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
+                keyChar = key.KeyChar;
+
+                if (char.IsDigit(keyChar))
+                {
+                    keyValidity = true;
+
+                    switch (keyChar)
+                    {
+                        case '1':
+                            GetOutMoney();
+                            break;
+                        case '2':
+                            SeeAmount();
+                            break;
+                    }
+                }
+                else
+                {
+                    keyValidity = false;
+                }
+            } while (keyValidity != true);
         }
         
         static void Menu()
@@ -269,7 +304,8 @@ namespace SimulationBancomat
         }
         static void GetOutMoney()
         {
-
+            int bankDeposit = 2000;
+            Console.WriteLine( );
         }
 
         static void SeeAmount()
