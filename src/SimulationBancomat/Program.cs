@@ -163,6 +163,12 @@ namespace SimulationBancomat
             Console.SetCursorPosition(x, y);
             Console.Write(character);
         }
+        static void DrawAtCenterString(int x, int y,int width , string character)
+        {
+            int centerX = x + (width/2) -(character.Length / 2);
+            Console.SetCursorPosition(centerX, y);
+            Console.Write(character);
+        }
 
         static void DrawAtChar(int x, int y, char character)
         {
@@ -281,6 +287,7 @@ namespace SimulationBancomat
             bool keyValidity = false;
             bool transactionsFinished = false;
             int timesDone = 0;
+            int moneyWithdrawalIndex = 0;
             do
             {
                 Presentation();
@@ -304,7 +311,7 @@ namespace SimulationBancomat
                     {
                         case '1':
                             Presentation();
-                            GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
+                            GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex);
                             transactionsFinished = false;
                             break;
                         case '2':
@@ -328,7 +335,7 @@ namespace SimulationBancomat
                 Console.Clear();
             } while (keyValidity != true || transactionsFinished != true);
         }
-        static void GetOutMoney(ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
+        static void GetOutMoney(ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions, ref int moneyWithdrawalIndex)
         {
             string showAmount = $"Solde: {bankMoneyAmount:c}";
             int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62/2) - (showAmount.Length/2));
@@ -341,17 +348,18 @@ namespace SimulationBancomat
             };
             int customGetOutAmount = 0;
             int screenheigth = 16;
+            int withdrawalTimes = 0;
+            
 
             DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
             DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, showAmount);
-            GetOutMoneyAmount(ref bankMoneyAmount, ref withdrawalMoneyLogs);
+            GetOutMoneyAmount(ref bankMoneyAmount, ref withdrawalMoneyLogs, ref moneyWithdrawalIndex);
             showAmount = $"Solde: {bankMoneyAmount:c}";
             Presentation();
             DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth - 8);
-            DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, showAmount);
-            PrintReceipt(ref withdrawalMoneyLogs);
+            PrintReceipt(ref withdrawalMoneyLogs, moneyWithdrawalIndex);
 
-            void GetOutMoneyAmount (ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs)
+            void GetOutMoneyAmount (ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, ref int moneyWithdrawalIndex)
             {
                 int moneyPosX = PasswordData.PASSWORD_SCREEN_X - 12;
                 int moneyPosY = PasswordData.PASSWORD_SCREEN_Y;
@@ -366,7 +374,6 @@ namespace SimulationBancomat
                 char keyChar;
                 bool keyValidity = false;
                 int amountIndex = 0;
-                int moneyWithdrawalIndex = 0;
 
 
                 Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
@@ -456,14 +463,13 @@ namespace SimulationBancomat
                     }
                 } while (keyValidity != true);
             }
-            void PrintReceipt(ref decimal[] withdrawalMoneyLogs)
+            void PrintReceipt(ref decimal[] withdrawalMoneyLogs, int moneyWithdrawalIndex)
             {
                 int optionPosX = PasswordData.PASSWORD_SCREEN_X - 15;
                 int optionPosY = PasswordData.PASSWORD_SCREEN_Y;
                 int shift = withdrawalMoneyOptions[0].Length;
-                int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - (showAmount.Length / 2));
+                int centerWritingSolde = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - (showAmount.Length / 2));
                 char keyChar;
-                bool keyValidity = false;
                 Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y + 1);
                 Console.WriteLine("Veuillez sélectionner une option: ");
                 for (int i = 0; i < withdrawalMoneyOptions.Length; i++)
@@ -472,30 +478,42 @@ namespace SimulationBancomat
                     Console.WriteLine($"{i + 1}. {withdrawalMoneyOptions[i]}");
                     optionPosX += (shift + 5);
                 }
-
-                ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
-                keyChar = key.KeyChar;
-                if (char.IsDigit(keyChar))
+                do
                 {
-                    keyValidity = true;
-                    if (keyChar.ToString() == "1")
+                    ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
+                    keyChar = key.KeyChar;
+                    if (char.IsDigit(keyChar))
                     {
-                        DrawScreen(PasswordData.PASSWORD_SCREEN_X - 10, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
-                        for (int i = 0; i < withdrawalMoneyLogs.Length; i++)
+                        if (keyChar.ToString() == "1")
                         {
-                            Console.SetCursorPosition(centerWriting, PasswordData.PASSWORD_SCREEN_Y + i);
-                            Console.Write($"{i + 1}.{showAmount}");
+                            int screenWidth = 55;
+                            withdrawalTimes++;
+                            Presentation();
+                            DrawScreen(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y - 1, screenWidth, screenheigth);
+                            DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{showAmount}");
+                            for (int i = 0; i < moneyWithdrawalIndex; i++)
+                            {
+                                if (i == 0)
+                                {
+                                    DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y+2 + (i*1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
+                                }
+                                else
+                                {
+                                    DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y+2 + (i*1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
+                                }
+                            }
+                            DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, ((PasswordData.PASSWORD_SCREEN_Y - 1) + (screenheigth - 2)), screenWidth, "Appuyer sur 'Q' pour revenir au menu des options");
+                        }
+                        else if (keyChar.ToString() == "2")
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
                         }
                     }
-                    else
-                        return;
-                }
-                else
-                {
-                    keyValidity = false;
-                    MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
-                }
-
+                } while (keyChar.ToString().ToUpper() != "Q");
             }
         }
 
