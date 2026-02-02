@@ -447,13 +447,18 @@ namespace SimulationBancomat
                             withdrawalMoneyLogs[moneyWithdrawalIndex] = customGetOutAmount;
                             moneyWithdrawalIndex++;
                         }
-                        else
+                        else if(keyChar.ToString() == "1" || keyChar.ToString() == "2" || keyChar.ToString() == "3" || keyChar.ToString() == "4")
                         {
                             amountIndex = Convert.ToInt32(keyChar.ToString());
                             amountIndex -= 1;
                             bankMoneyAmount = bankMoneyAmount - getOutAmountOptions[amountIndex];
                             withdrawalMoneyLogs[moneyWithdrawalIndex] = getOutAmountOptions[amountIndex];
                             moneyWithdrawalIndex++;
+                        }
+                        else
+                        {
+                            keyValidity = false;
+                            MessageBox(IntPtr.Zero, "La valeur donnée ne fait pas partie des entiers attendus", "Erreur", 16);
                         }
                     }
                     else
