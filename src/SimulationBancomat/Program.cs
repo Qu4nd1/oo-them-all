@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
+using SimulationBancomat.Display;
+using static SimulationBancomat.Display.SuperConsole;
 
 namespace SimulationBancomat
 {
@@ -12,7 +14,7 @@ namespace SimulationBancomat
 
         public static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
 
-        struct PasswordData
+        public struct PasswordData
         {
             public bool passwordValidity;
             public int password;
@@ -38,13 +40,6 @@ namespace SimulationBancomat
         {
             PasswordData data = new PasswordData(false, 123456, 0);
 
-            string[] emptyButton = new string[]
-            {
-                "┌───┐",
-                "│   │",
-                "└───┘"
-            };
-
             char keyChar = ' ';
 
             string[] bancomatOptions = new string[]
@@ -65,168 +60,23 @@ namespace SimulationBancomat
 
             do
             {
-                Presentation();
-                PasswordVisualSuppression();
-                DrawNumPad(emptyButton, keyChar);
+                SuperConsole.Presentation();
+                SuperConsole.PasswordVisualSuppression();
+                SuperConsole.DrawNumPad(emptyButton, keyChar);
 
                 data.passwordValidity = VerifyCode(ref data, emptyButton, keyChar);
 
                 if (data.passwordValidity == true)
                 {
-                    Presentation();
-                    MenuChoice(bancomatOptions, ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
+                    SuperConsole.Presentation();
+                    Menu.MenuChoice(bancomatOptions, ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
                 }
             } while (data.passwordValidity != true);
 
                 Console.ReadLine();
         }
 
-        static void DrawNumPad(string[] emptyButton, char keyChar)
-        {
-            int initialButtonX = PasswordData.PASSWORD_SCREEN_X - 1;
-            int initalButtonY = PasswordData.PASSWORD_SCREEN_Y + 3;
-            int buttonX = initialButtonX;
-            int buttonY = initalButtonY;
-            int SCREEN_X = PasswordData.PASSWORD_SCREEN_X - 5;
-            int SCREEN_Y = PasswordData.PASSWORD_SCREEN_Y - 1;
-            const int HORIZONTAL_SPACE = 7;
-            const int VERTICAL_SPACE = 4;
-
-            Console.CursorVisible = false;
-
-            DrawScreen(SCREEN_X, SCREEN_Y, 27, 21);
-            DrawScreen(PasswordData.PASSWORD_SCREEN_X, PasswordData.PASSWORD_SCREEN_Y, 17, 3);
-
-
-            for (int i = 0; i < 10; i++)
-            {
-                char padNumber = (char)('0' + ((i + 1) % 10));
-
-                if (i == 3 || i == 6 || i == 9)
-                {
-                    buttonX = initialButtonX;
-                    buttonY += VERTICAL_SPACE;
-                    if (i == 9)
-                        buttonX += HORIZONTAL_SPACE;
-                }
-                if (keyChar == padNumber)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    for (int j = 0; j < 3; j++)
-                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    Console.ResetColor();
-                    Thread.Sleep(50);
-                    for (int j = 0; j < 3; j++)
-                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    buttonX += HORIZONTAL_SPACE;
-                }
-                else
-                {
-                    for (int j = 0; j < 3; j++)
-                        DrawAtString(buttonX, buttonY + j, emptyButton[j]);
-                    DrawAtChar(buttonX + 2, buttonY + 1, padNumber);
-                    buttonX += HORIZONTAL_SPACE;
-                }
-            }
-        }
-
-        static void DrawScreen(int x, int y, int width, int height)
-        {
-            // Ligne du haut
-            DrawHorizontalLine(x, y, width, '─');
-
-            // Ligne du bas
-            DrawHorizontalLine(x, y + height - 1, width, '─');
-
-            // Côté gauche
-            DrawVerticalLine(x, y, height, '│');
-
-            // Côté droit
-            DrawVerticalLine(x + width - 1, y, height, '│');
-
-            // Coins
-            Console.SetCursorPosition(x, y);
-            Console.Write('┌');
-            Console.SetCursorPosition(x + width - 1, y);
-            Console.Write('┐');
-            Console.SetCursorPosition(x, y + height - 1);
-            Console.Write('└');
-            Console.SetCursorPosition(x + width - 1, y + height - 1);
-            Console.Write('┘');
-        }
-
-        static void DrawAtString(int x, int y, string character)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write(character);
-        }
-        static void DrawAtCenterString(int x, int y,int width , string character)
-        {
-            int centerX = x + (width/2) -(character.Length / 2);
-            Console.SetCursorPosition(centerX, y);
-            Console.Write(character);
-        }
-
-        static void DrawAtChar(int x, int y, char character)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write(character);
-        }
-        static void ClearAt(int x, int y)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write(' ');
-        }
-
-        static void DrawHorizontalLine(int startX, int y, int length, char character)
-        {
-            for (int x = startX; x < startX + length; x++)
-            {
-                Console.SetCursorPosition(x, y);
-                Console.Write(character);
-            }
-        }
-
-        static void DrawVerticalLine(int x, int startY, int length, char character)
-        {
-            for (int y = startY; y < startY + length; y++)
-            {
-                Console.SetCursorPosition(x, y);
-                Console.Write(character);
-            }
-        }
-
-        static void PasswordVisualSuppression()
-        {
-            for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
-            {
-                int passwordNumbersX = (PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2);
-                DrawAtChar(passwordNumbersX, PasswordData.PASSWORD_SCREEN_Y + 1, '_');
-            }
-        }
-        static void Presentation()
-        {
-            Console.Clear();
-            Console.WriteLine(@"
-                                 ____    _    _   _  ___  _   _ _____ 
-                                | __ )  / \  | \ | |/ _ \| | | | ____|
-                                |  _ \ / _ \ |  \| | | | | | | |  _|  
-                                | |_) / ___ \| |\  | |_| | |_| | |___ 
-                                |____/_/   \_\_| \_|\__\_\\___/|_____|
-                                                      \_\
-
-                     ____      _    ___ _____ _____ _____ ___ ____  _____ _   _ 
-                    |  _ \    / \  |_ _|  ___|  ___| ____|_ _/ ___|| ____| \ | |
-                    | |_) |  / _ \  | || |_  | |_  |  _|  | |\___ \|  _| |  \| |
-                    |  _ <  / ___ \ | ||  _| |  _| | |___ | | ___) | |___| |\  |
-                    |_| \_\/_/   \_\___|_|   |_|   |_____|___|____/|_____|_| \_|
-            ");
-            Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 7, PasswordData.PASSWORD_SCREEN_Y - 2);
-            Console.WriteLine("Bienvenue à la banque Raiffeisen");
-        }
+        
 
         static bool VerifyCode(ref PasswordData data, string[] emptyButton, char keyChar)
         {
@@ -246,10 +96,10 @@ namespace SimulationBancomat
                     if (char.IsDigit(keyChar))
                     {
                         input += keyChar;
-                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
-                        DrawNumPad(emptyButton,keyChar);
+                        SuperConsole.DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
+                        SuperConsole.DrawNumPad(emptyButton,keyChar);
                         Thread.Sleep(50);
-                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*'); // Affichage des numéros entrés
+                        SuperConsole.DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*'); // Affichage des numéros entrés
                     }
                     else
                     {
@@ -281,61 +131,8 @@ namespace SimulationBancomat
             return data.passwordValidity;
         }
 
-        static void MenuChoice(string[] crtBancomatOptions, ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
-        {
-            char keyChar;
-            bool keyValidity = false;
-            bool transactionsFinished = false;
-            int timesDone = 0;
-            int moneyWithdrawalIndex = 0;
-            do
-            {
-                Presentation();
-                DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, crtBancomatOptions.Length + 6);
-                Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
-                Console.WriteLine("Veuillez choisir l'action désirer !\n");
-                for (int i = 0; i < crtBancomatOptions.Length; i++)
-                {
-                    Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 20, PasswordData.PASSWORD_SCREEN_Y + (i + 1) * 2);
-                    Console.WriteLine($"\t{i + 1}. {crtBancomatOptions[i]}");
-                }
-
-                ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
-                keyChar = key.KeyChar;
-
-                if (char.IsDigit(keyChar))
-                {
-                    keyValidity = true;
-
-                    switch (keyChar)
-                    {
-                        case '1':
-                            Presentation();
-                            GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex);
-                            transactionsFinished = false;
-                            break;
-                        case '2':
-                            Presentation();
-                            SeeAmount(bankMoneyAmount);
-                            transactionsFinished = false;
-                            break;
-                        case '3':
-                            Presentation();
-                            transactionsFinished = true;
-                            Environment.Exit(0);
-                            break;
-                    }
-                }
-                else
-                {
-                    keyValidity = false;
-                    MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
-                }
-                timesDone++;
-                Console.Clear();
-            } while (keyValidity != true || transactionsFinished != true);
-        }
-        static void GetOutMoney(ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions, ref int moneyWithdrawalIndex)
+        
+        static public void GetOutMoney(ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions, ref int moneyWithdrawalIndex)
         {
             string showAmount = $"Solde: {bankMoneyAmount:c}";
             int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62/2) - (showAmount.Length/2));
@@ -349,14 +146,14 @@ namespace SimulationBancomat
             int customGetOutAmount = 0;
             int screenheigth = 16;
             int withdrawalTimes = 0;
-            
 
-            DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
-            DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, showAmount);
+
+            SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
+            SuperConsole.DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, showAmount);
             GetOutMoneyAmount(ref bankMoneyAmount, ref withdrawalMoneyLogs, ref moneyWithdrawalIndex);
             showAmount = $"Solde: {bankMoneyAmount:c}";
-            Presentation();
-            DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth - 8);
+            SuperConsole.Presentation();
+            SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth - 8);
             PrintReceipt(ref withdrawalMoneyLogs, moneyWithdrawalIndex);
 
             void GetOutMoneyAmount (ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, ref int moneyWithdrawalIndex)
@@ -438,7 +235,7 @@ namespace SimulationBancomat
                                     customGetOutAmountValidity = false;
                                     MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {bankMoneyAmount:c}", "Erreur", 16);
                                     for (int i = 0; i < customGetOutAmount.ToString().Length; i++)
-                                        ClearAt((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length + (i), PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
+                                        SuperConsole.ClearAt((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length + (i), PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
                                 }
                                 else
                                     customGetOutAmountValidity = true;
@@ -493,21 +290,21 @@ namespace SimulationBancomat
                         {
                             int screenWidth = 55;
                             withdrawalTimes++;
-                            Presentation();
-                            DrawScreen(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y - 1, screenWidth, screenheigth);
-                            DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{showAmount}");
+                            SuperConsole.Presentation();
+                            SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y - 1, screenWidth, screenheigth);
+                            SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{showAmount}");
                             for (int i = 0; i < moneyWithdrawalIndex; i++)
                             {
                                 if (i == 0)
                                 {
-                                    DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y+2 + (i*1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
+                                    SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y+2 + (i*1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
                                 }
                                 else
                                 {
-                                    DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y+2 + (i*1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
+                                    SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y+2 + (i*1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
                                 }
                             }
-                            DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, ((PasswordData.PASSWORD_SCREEN_Y - 1) + (screenheigth - 2)), screenWidth, "Appuyer sur 'Q' pour revenir au menu des options");
+                            SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, ((PasswordData.PASSWORD_SCREEN_Y - 1) + (screenheigth - 2)), screenWidth, "Appuyer sur 'Q' pour revenir au menu des options");
                         }
                         else if (keyChar.ToString() == "2")
                         {
@@ -522,17 +319,17 @@ namespace SimulationBancomat
             }
         }
 
-        static void SeeAmount(decimal bankMoneyAmount)
+        static public void SeeAmount(decimal bankMoneyAmount)
         {
             string showAmount = $"Solde: {bankMoneyAmount:c}";
             int screenheigth = 5;
             int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - (showAmount.Length / 2));
             char keyChar;
 
-            Presentation();
-            DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
-            DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, showAmount);
-            DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 21, ((PasswordData.PASSWORD_SCREEN_Y + 2)), 62, "Appuyer sur 'Q' pour revenir au menu des options");
+            SuperConsole.Presentation();
+            SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
+            SuperConsole.DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, showAmount);
+            SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 21, ((PasswordData.PASSWORD_SCREEN_Y + 2)), 62, "Appuyer sur 'Q' pour revenir au menu des options");
 
             ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
             keyChar = key.KeyChar;
