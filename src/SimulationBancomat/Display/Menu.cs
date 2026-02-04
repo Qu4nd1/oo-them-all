@@ -4,12 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationBancomat;
+using SimulationBancomat.Features;
 using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Display
 {
     static class Menu
     {
+        public static string[] bancomatOptions = new string[]
+            {
+                "Retirer de l'argent",
+                "Consulter mon solde",
+                "Quitter"
+            };
         static public void MenuChoice(string[] crtBancomatOptions, ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
         {
             char keyChar;
@@ -40,12 +47,12 @@ namespace SimulationBancomat.Display
                     {
                         case '1':
                             SuperConsole.Presentation();
-                            GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex);
+                            Withdrawal.GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex);
                             transactionsFinished = false;
                             break;
                         case '2':
                             SuperConsole.Presentation();
-                            SeeAmount(bankMoneyAmount);
+                            AccountAmount.See(bankMoneyAmount);
                             transactionsFinished = false;
                             break;
                         case '3':
