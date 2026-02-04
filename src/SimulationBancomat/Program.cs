@@ -6,7 +6,7 @@ using System.Text;
 using SimulationBancomat.Display;
 using SimulationBancomat.Features;
 using static SimulationBancomat.Display.SuperConsole;
-using static SimulationBancomat.Features.Withdrawal;
+using static SimulationBancomat.Features.Transactions;
 using static SimulationBancomat.Features.Verifications;
 
 namespace SimulationBancomat
@@ -54,7 +54,7 @@ namespace SimulationBancomat
                 if (data.passwordValidity == true)
                 {
                     SuperConsole.Presentation();
-                    Menu.MenuChoice(Menu.bancomatOptions, ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
+                    Menu.Choice(Menu.bancomatOptions, ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
                 }
             } while (data.passwordValidity != true);
 

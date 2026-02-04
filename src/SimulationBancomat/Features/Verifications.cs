@@ -16,7 +16,6 @@ namespace SimulationBancomat.Features
             Console.CursorVisible = true;
             string input = " ";
 
-
             do
             {
                 for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)

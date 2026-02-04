@@ -9,7 +9,7 @@ using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Features
 {
-    static class Withdrawal
+    static class Transactions
     {
         public static decimal[] getOutAmountOptions = new decimal[]
         {
@@ -152,6 +152,10 @@ namespace SimulationBancomat.Features
                     MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
                 }
             } while (keyValidity != true);
+        }
+        static public void PutInMoney()
+        {
+
         }
     }
 }

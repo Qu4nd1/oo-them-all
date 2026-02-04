@@ -13,11 +13,12 @@ namespace SimulationBancomat.Display
     {
         public static string[] bancomatOptions = new string[]
             {
+                "Deposer de l'argent",
                 "Retirer de l'argent",
                 "Consulter mon solde",
                 "Quitter"
             };
-        static public void MenuChoice(string[] crtBancomatOptions, ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
+        static public void Choice(string[] crtBancomatOptions, ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
         {
             char keyChar;
             bool keyValidity = false;
@@ -47,15 +48,20 @@ namespace SimulationBancomat.Display
                     {
                         case '1':
                             SuperConsole.Presentation();
-                            Withdrawal.GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex);
+                            Transactions.PutInMoney();
                             transactionsFinished = false;
                             break;
                         case '2':
                             SuperConsole.Presentation();
-                            AccountAmount.See(bankMoneyAmount);
+                            Transactions.GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex);
                             transactionsFinished = false;
                             break;
                         case '3':
+                            SuperConsole.Presentation();
+                            AccountAmount.See(bankMoneyAmount);
+                            transactionsFinished = false;
+                            break;
+                        case '4':
                             SuperConsole.Presentation();
                             transactionsFinished = true;
                             Environment.Exit(0);

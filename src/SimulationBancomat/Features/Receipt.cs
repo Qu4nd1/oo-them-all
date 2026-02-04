@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static SimulationBancomat.Program;
-using static SimulationBancomat.Features.Withdrawal;
+using static SimulationBancomat.Features.Transactions;
 
 namespace SimulationBancomat.Features
 {
