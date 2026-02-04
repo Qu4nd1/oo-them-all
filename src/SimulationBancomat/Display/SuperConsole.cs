@@ -12,8 +12,6 @@ namespace SimulationBancomat.Display
     {
         public static int initialButtonX = PasswordData.PASSWORD_SCREEN_X - 1;
         public static int initalButtonY = PasswordData.PASSWORD_SCREEN_Y + 3;
-        public static int buttonX = initialButtonX;
-        public static int buttonY = initalButtonY;
         public static int SCREEN_X = PasswordData.PASSWORD_SCREEN_X - 5;
         public static int SCREEN_Y = PasswordData.PASSWORD_SCREEN_Y - 1;
         public const int HORIZONTAL_SPACE = 7;
@@ -28,6 +26,9 @@ namespace SimulationBancomat.Display
 
         static public void DrawNumPad(string[] emptyButton, char keyChar)
         {
+            int buttonX = initialButtonX;
+            int buttonY = initalButtonY;
+
             Console.CursorVisible = false;
 
             DrawScreen(SCREEN_X, SCREEN_Y, 27, 21);
