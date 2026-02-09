@@ -110,12 +110,10 @@ namespace SimulationBancomat.Features
                 keyChar = key.KeyChar;
 
                 if (char.IsDigit(keyChar))
-                {
-
+                { 
                     customAmountIndex = Convert.ToString(getOutAmountOptions.Length + 1);
                     keyValidity = true;
                     withdrawalTimes++;
-
 
                     if (keyChar.ToString() == customAmountIndex)
                     {
