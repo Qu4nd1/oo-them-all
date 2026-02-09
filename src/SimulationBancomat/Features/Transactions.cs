@@ -67,6 +67,7 @@ namespace SimulationBancomat.Features
             bool keyValidity = false;
             int amountIndex = 0;
 
+            Console.CursorVisible = false;
 
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
             Console.WriteLine("Veuillez sélectionner la quantité d'argent a retirer :");
@@ -113,6 +114,7 @@ namespace SimulationBancomat.Features
 
                     customAmountIndex = Convert.ToString(getOutAmountOptions.Length + 1);
                     keyValidity = true;
+                    withdrawalTimes++;
 
 
                     if (keyChar.ToString() == customAmountIndex)
@@ -158,6 +160,7 @@ namespace SimulationBancomat.Features
                     keyValidity = false;
                     MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
                 }
+                Console.CursorVisible = false;
             } while (keyValidity != true);
         }
        static public void PutInMoneyAmount(ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, ref int moneyWithdrawalIndex)
@@ -168,14 +171,12 @@ namespace SimulationBancomat.Features
             int writePosX = moneyPosX;
             int shiftY = 2;
             int writePosY = moneyPosY;
-
             string customAmountIndex = "";
             string question = "Veuillez indiquer le montant a déposer: ";
             bool customPutInAmountValidity = false;
             char keyChar;
             bool keyValidity = false;
             int amountIndex = 0;
-
 
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
             Console.WriteLine("Veuillez sélectionner la quantité d'argent a déposer :");
@@ -216,6 +217,7 @@ namespace SimulationBancomat.Features
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche
                 keyChar = key.KeyChar;
+                withdrawalTimes++;
 
                 if (char.IsDigit(keyChar))
                 {
@@ -226,24 +228,11 @@ namespace SimulationBancomat.Features
 
                     if (keyChar.ToString() == customAmountIndex)
                     {
-                        do
-                        {
-                            Console.CursorVisible = true;
-                            Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
-                            Console.Write(question);
-                            Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
-                            customAmount = Convert.ToInt32(Console.ReadLine());
-
-                            if (customAmount > bankMoneyAmount)
-                            {
-                                customPutInAmountValidity = false;
-                                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {bankMoneyAmount:c}", "Erreur", 16);
-                                for (int i = 0; i < customAmount.ToString().Length; i++)
-                                    SuperConsole.ClearAt((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length + (i), PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
-                            }
-                            else
-                                customPutInAmountValidity = true;
-                        } while (customPutInAmountValidity != true);
+                        Console.CursorVisible = true;
+                        Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
+                        Console.Write(question);
+                        Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
+                        customAmount = Convert.ToInt32(Console.ReadLine());
                         bankMoneyAmount = bankMoneyAmount + customAmount;
                         withdrawalMoneyLogs[moneyWithdrawalIndex] = $"+ {customAmount:c}";
                         moneyWithdrawalIndex++;
@@ -267,6 +256,7 @@ namespace SimulationBancomat.Features
                     keyValidity = false;
                     MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
                 }
+                Console.CursorVisible = false;
             } while (keyValidity != true);
         }
     }

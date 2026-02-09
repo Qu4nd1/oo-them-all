@@ -18,6 +18,7 @@ namespace SimulationBancomat.Features
             int shift = withdrawalMoneyOptions[0].Length;
             int centerWritingSolde = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - (showAmount.Length / 2));
             char keyChar;
+            int receiptHeigth =withdrawalTimes * (2) + 5;
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y + 1);
             Console.WriteLine("Veuillez sélectionner une option: ");
             for (int i = 0; i < withdrawalMoneyOptions.Length; i++)
@@ -35,22 +36,22 @@ namespace SimulationBancomat.Features
                     if (keyChar.ToString() == "1")
                     {
                         int screenWidth = 55;
-                        withdrawalTimes++;
+
                         SuperConsole.Presentation();
-                        SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y - 1, screenWidth, screenheigth);
+                        SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y - 1, screenWidth, receiptHeigth);
                         SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{showAmount}");
                         for (int i = 0; i < moneyWithdrawalIndex; i++)
                         {
                             if (i == 0)
                             {
-                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 1)), screenWidth, $"n°{i + 1}: {withdrawalMoneyLogs[i]}");
+                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 2)), screenWidth, $"{withdrawalMoneyLogs[i]:c}");
                             }
                             else
                             {
-                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 1)), screenWidth, $"n°{i + 1}: {withdrawalMoneyLogs[i]}");
+                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 2)), screenWidth, $"{withdrawalMoneyLogs[i]:c}");
                             }
                         }
-                        SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, ((PasswordData.PASSWORD_SCREEN_Y - 1) + (screenheigth - 2)), screenWidth, "Appuyer sur 'Q' pour revenir au menu des options");
+                        SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, ((PasswordData.PASSWORD_SCREEN_Y - 1) + (receiptHeigth - 2)), screenWidth, "Appuyer sur 'Q' pour revenir au menu des options");
                     }
                     else if (keyChar.ToString() == "2")
                     {
