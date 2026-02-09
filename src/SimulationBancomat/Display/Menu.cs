@@ -18,7 +18,7 @@ namespace SimulationBancomat.Display
                 "Consulter mon solde",
                 "Quitter"
             };
-        static public void Choice(string[] crtBancomatOptions, ref decimal bankMoneyAmount, ref decimal[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
+        static public void Choice(string[] crtBancomatOptions, ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
         {
             char keyChar;
             bool keyValidity = false;
@@ -28,7 +28,7 @@ namespace SimulationBancomat.Display
             do
             {
                 SuperConsole.Presentation();
-                SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, crtBancomatOptions.Length + 6);
+                SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, crtBancomatOptions.Length + 8);
                 Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
                 Console.WriteLine("Veuillez choisir l'action désirer !\n");
                 for (int i = 0; i < crtBancomatOptions.Length; i++)
@@ -48,12 +48,12 @@ namespace SimulationBancomat.Display
                     {
                         case '1':
                             SuperConsole.Presentation();
-                            Transactions.PutInMoney();
+                            Transactions.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,true);
                             transactionsFinished = false;
                             break;
                         case '2':
                             SuperConsole.Presentation();
-                            Transactions.GetOutMoney(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex);
+                            Transactions.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,false);
                             transactionsFinished = false;
                             break;
                         case '3':

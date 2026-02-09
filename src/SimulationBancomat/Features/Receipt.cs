@@ -11,7 +11,7 @@ namespace SimulationBancomat.Features
 {
     static class Receipt
     {
-        static public void Print(ref decimal[] withdrawalMoneyLogs, int moneyWithdrawalIndex)
+        static public void Print(ref string[] withdrawalMoneyLogs, int moneyWithdrawalIndex)
         {
             int optionPosX = PasswordData.PASSWORD_SCREEN_X - 15;
             int optionPosY = PasswordData.PASSWORD_SCREEN_Y;
@@ -43,11 +43,11 @@ namespace SimulationBancomat.Features
                         {
                             if (i == 0)
                             {
-                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
+                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 1)), screenWidth, $"n°{i + 1}: {withdrawalMoneyLogs[i]}");
                             }
                             else
                             {
-                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 1)), screenWidth, $"n°{i + 1}: -{withdrawalMoneyLogs[i]:c}");
+                                SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 1)), screenWidth, $"n°{i + 1}: {withdrawalMoneyLogs[i]}");
                             }
                         }
                         SuperConsole.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, ((PasswordData.PASSWORD_SCREEN_Y - 1) + (screenheigth - 2)), screenWidth, "Appuyer sur 'Q' pour revenir au menu des options");

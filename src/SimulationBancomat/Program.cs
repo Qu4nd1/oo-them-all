@@ -41,6 +41,13 @@ namespace SimulationBancomat
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
+            //***** Code donner par Anthropic Claude (IA) pour changer le format d'affichage monétaire *****
+            CultureInfo culture = (CultureInfo)CultureInfo.GetCultureInfo("fr-CH").Clone();
+            culture.NumberFormat.CurrencySymbol = "CHF";
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+            //**********************************************************************************************
+
             PasswordData data = new PasswordData(false, 123456, 0);
 
             do
