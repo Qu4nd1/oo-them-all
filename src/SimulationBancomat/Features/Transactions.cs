@@ -66,6 +66,7 @@ namespace SimulationBancomat.Features
             char keyChar;
             bool keyValidity = false;
             int amountIndex = 0;
+            string customAmountAnswer;
 
             Console.CursorVisible = false;
 
@@ -122,15 +123,23 @@ namespace SimulationBancomat.Features
                             Console.CursorVisible = true;
                             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
                             Console.Write(question);
-                            Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
-                            customAmount = Convert.ToInt32(Console.ReadLine());
+                            do
+                            {
+                                Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
+                                customAmountAnswer = Console.ReadLine();
+                                keyValidity = int.TryParse(customAmountAnswer, out customAmount);
+                                if (keyValidity == false)
+                                {
+                                    MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
+                                    SuperConsole.ClearAtForLength((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2), customAmountAnswer.Length);
+                                }
+                            } while (keyValidity != true);
 
                             if (customAmount > bankMoneyAmount)
                             {
                                 customGetOutAmountValidity = false;
                                 MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {bankMoneyAmount:c}", "Erreur", 16);
-                                for (int i = 0; i < customAmount.ToString().Length; i++)
-                                    SuperConsole.ClearAt((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length + (i), PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
+                                SuperConsole.ClearAtForLength((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2), customAmount.ToString().Length);
                             }
                             else
                                 customGetOutAmountValidity = true;
@@ -175,6 +184,7 @@ namespace SimulationBancomat.Features
             char keyChar;
             bool keyValidity = false;
             int amountIndex = 0;
+            string customAmountAnswer;
 
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
             Console.WriteLine("Veuillez sélectionner la quantité d'argent a déposer :");
@@ -229,8 +239,19 @@ namespace SimulationBancomat.Features
                         Console.CursorVisible = true;
                         Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
                         Console.Write(question);
-                        Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
-                        customAmount = Convert.ToInt32(Console.ReadLine());
+                        do
+                        {
+                            Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
+                            customAmountAnswer = Console.ReadLine();
+                            keyValidity = int.TryParse(customAmountAnswer, out customAmount);
+                            if (keyValidity == false)
+                            {
+                                MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
+                                for (int i = 0; i < customAmountAnswer.Length; i++)
+                                    SuperConsole.ClearAt((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length + i, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
+                            }
+                        } while (keyValidity != true);
+                        
                         bankMoneyAmount = bankMoneyAmount + customAmount;
                         withdrawalMoneyLogs[moneyWithdrawalIndex] = $"+ {customAmount:c}";
                         moneyWithdrawalIndex++;
