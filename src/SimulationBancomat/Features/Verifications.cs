@@ -19,7 +19,7 @@ namespace SimulationBancomat.Features
 
             do
             {
-                PasswordVisualSuppression();
+                PasswordVisualSuppression(); // Writes OR Rewrites the underscores to show where the users is going to enter his password
                 for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
                 {
                     Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1);
