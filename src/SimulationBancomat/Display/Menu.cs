@@ -11,30 +11,32 @@ namespace SimulationBancomat.Display
 {
     static class Menu
     {
-        public static string[] bancomatOptions = new string[]
-            {
-                "Deposer de l'argent",
-                "Retirer de l'argent",
-                "Consulter mon solde",
-                "Quitter"
-            };
-        static public void Choice(string[] crtBancomatOptions, ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
+        
+        static public void Choice( ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
         {
             char keyChar;
             bool keyValidity = false;
             bool transactionsFinished = false;
             int timesDone = 0;
             int moneyWithdrawalIndex = 0;
+            string[] bancomatOptions = new string[]
+            {
+                "Deposer de l'argent",
+                "Retirer de l'argent",
+                "Consulter mon solde",
+                "Quitter"
+            };
+
             do
             {
                 SuperConsole.Presentation();
-                SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, crtBancomatOptions.Length + 8);
+                SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, bancomatOptions.Length + 8);
                 Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
                 Console.WriteLine("Veuillez choisir l'action désirer !\n");
-                for (int i = 0; i < crtBancomatOptions.Length; i++)
+                for (int i = 0; i < bancomatOptions.Length; i++)
                 {
                     Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 20, PasswordData.PASSWORD_SCREEN_Y + (i + 1) * 2);
-                    Console.WriteLine($"\t{i + 1}. {crtBancomatOptions[i]}");
+                    Console.WriteLine($"\t{i + 1}. {bancomatOptions[i]}");
                 }
 
                 ConsoleKeyInfo key = Console.ReadKey(true);  // true = ne pas afficher la touche

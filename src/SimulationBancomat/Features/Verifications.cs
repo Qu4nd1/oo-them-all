@@ -5,19 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static SimulationBancomat.Program;
+using static SimulationBancomat.Display.SuperConsole;
 
 namespace SimulationBancomat.Features
 {
     static class Verifications
     {
         public static char keyChar = ' ';
-        static public bool Code(ref PasswordData data, string[] emptyButton, char keyChar)
+        static public void Code(ref PasswordData data, string[] emptyButton, char keyChar)
         {
             Console.CursorVisible = true;
             string input = " ";
 
             do
             {
+                PasswordVisualSuppression();
                 for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
                 {
                     Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1);
@@ -29,10 +31,10 @@ namespace SimulationBancomat.Features
                     if (char.IsDigit(keyChar))
                     {
                         input += keyChar;
-                        SuperConsole.DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
-                        SuperConsole.DrawNumPad(emptyButton, keyChar);
+                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, keyChar);  // Afficher la valeur puis
+                        DrawNumPad(emptyButton, keyChar);
                         Thread.Sleep(50);
-                        SuperConsole.DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*'); // Affichage des numéros entrés
+                        DrawAtChar((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1, '*'); // Affichage des numéros entrés
                     }
                     else
                     {
@@ -52,16 +54,8 @@ namespace SimulationBancomat.Features
                     input = "";
                     data.tempPassword = 0;
                     MessageBox(IntPtr.Zero, "Code incorrect", "Erreur", 16);
-
-                    for (int i = 0; i < PasswordData.PASSWORD_LENGTH; i++)
-                    {
-                        Console.SetCursorPosition((PasswordData.PASSWORD_SCREEN_X + 3) + (i * 2), PasswordData.PASSWORD_SCREEN_Y + 1);
-                        Console.Write("_");
-                    }
                 }
             } while (data.passwordValidity == false);
-
-            return data.passwordValidity;
         }
     }
 }
