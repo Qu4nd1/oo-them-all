@@ -6,6 +6,7 @@ using System.Text;
 using SimulationBancomat.Display;
 using SimulationBancomat.Features;
 using static SimulationBancomat.Display.SuperConsole;
+using static SimulationBancomat.Display.Menu;
 using static SimulationBancomat.Features.Transactions;
 using static SimulationBancomat.Features.Verifications;
 
@@ -50,22 +51,14 @@ namespace SimulationBancomat
 
             PasswordData data = new PasswordData(false, 123456, 0);
 
-            do
-            {
-                SuperConsole.Presentation();
-                SuperConsole.PasswordVisualSuppression();
-                SuperConsole.DrawNumPad(emptyButton, Verifications.keyChar);
+            Presentation();
+            DrawNumPad(emptyButton, Verifications.keyChar);
+            Code(ref data, emptyButton, Verifications.keyChar);
 
-                data.passwordValidity = Verifications.Code(ref data, emptyButton, Verifications.keyChar);
+            Presentation();
+            Choice(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
 
-                if (data.passwordValidity == true)
-                {
-                    SuperConsole.Presentation();
-                    Menu.Choice(Menu.bancomatOptions, ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
-                }
-            } while (data.passwordValidity != true);
-
-                Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }
