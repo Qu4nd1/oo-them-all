@@ -9,10 +9,10 @@ using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Display
 {
-    static class Menu
+    class Menu
     {
-        
-        static public void Choice( ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
+
+        public void Choice(SuperConsole console, Transactions transaction, Account account, ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
         {
             char keyChar;
             bool keyValidity = false;
@@ -29,8 +29,8 @@ namespace SimulationBancomat.Display
 
             do
             {
-                SuperConsole.Presentation();
-                SuperConsole.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, bancomatOptions.Length + 8);
+                console.Presentation();
+                console.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, bancomatOptions.Length + 8);
                 Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
                 Console.WriteLine("Veuillez choisir l'action désirer !\n");
                 for (int i = 0; i < bancomatOptions.Length; i++)
@@ -49,22 +49,22 @@ namespace SimulationBancomat.Display
                     switch (keyChar)
                     {
                         case '1':
-                            SuperConsole.Presentation();
-                            Transactions.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,true);
+                            console.Presentation();
+                            transaction.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,true);
                             transactionsFinished = false;
                             break;
                         case '2':
-                            SuperConsole.Presentation();
-                            Transactions.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,false);
+                            console.Presentation();
+                            transaction.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,false);
                             transactionsFinished = false;
                             break;
                         case '3':
-                            SuperConsole.Presentation();
-                            AccountAmount.See(bankMoneyAmount);
+                            console.Presentation();
+                            account.See(bankMoneyAmount);
                             transactionsFinished = false;
                             break;
                         case '4':
-                            SuperConsole.Presentation();
+                            console.Presentation();
                             transactionsFinished = true;
                             Environment.Exit(0);
                             break;

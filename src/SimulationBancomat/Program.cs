@@ -17,25 +17,6 @@ namespace SimulationBancomat
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
 
         public static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
-
-        public struct PasswordData
-        {
-            public bool passwordValidity;
-            public int password;
-            public int tempPassword;
-            public const int PASSWORD_SCREEN_X = 40;
-            public const int PASSWORD_SCREEN_Y = 16;
-            public const int PASSWORD_LENGTH = 6;
-
-            // Constructeur
-            public PasswordData(bool validity, int pwd, int tempPwd)
-            {
-                passwordValidity = validity;
-                password = pwd;
-                tempPassword = tempPwd;
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -50,13 +31,17 @@ namespace SimulationBancomat
             //**********************************************************************************************
 
             PasswordData data = new PasswordData(false, 123456, 0);
+            SuperConsole console = new SuperConsole();
+            Verifications verification = new Verifications();
+            Menu menu = new Menu();
+            Transactions transaction = new Transactions();
+            Account account = new Account();
+            console.Presentation();
+            console.DrawNumPad(console.emptyButton, verification.keyChar);
+            verification.Code(console, data, console.emptyButton, verification.keyChar);
 
-            Presentation();
-            DrawNumPad(emptyButton, Verifications.keyChar);
-            Code(ref data, emptyButton, Verifications.keyChar);
-
-            Presentation();
-            Choice(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
+            console.Presentation();
+            menu.Choice(console, transaction, account, ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
 
             Console.ReadLine();
         }
