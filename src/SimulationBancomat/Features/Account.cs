@@ -10,6 +10,32 @@ namespace SimulationBancomat.Features
 {
     class Account
     {
+        private decimal bankMoneyAmount;
+        public decimal BankMoneyAmount
+        {
+            get
+            {
+                return this.bankMoneyAmount;
+            }
+            set 
+            {
+                if (value > 0 && value < this.bankMoneyAmount)
+                    this.bankMoneyAmount = this.bankMoneyAmount - value;
+                else
+                {
+                    MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {this.bankMoneyAmount:c}", "Erreur", 16);
+                }
+            }
+        }
+        private string showAmount;
+        public string ShowAmount
+        {
+            get
+            {
+                return this.showAmount;
+            }
+        }
+
         public void See(decimal bankMoneyAmount)
         {
             string showAmount = $"Solde: {bankMoneyAmount:c}";
