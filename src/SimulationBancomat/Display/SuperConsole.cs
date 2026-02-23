@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationBancomat;
-using static SimulationBancomat.Program;
 using SimulationBancomat.Features;
 
 namespace SimulationBancomat.Display

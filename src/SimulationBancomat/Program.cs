@@ -2,7 +2,7 @@
 // ETML
 // Auteur : Kentin Fankhauser
 // Date : 23/02/2026
-// Description : Programme principal
+// Description : Simulation qui reproduit l'interface d'un bancomat sans pour autant traiter de l'argent réel
 //******************************************************************************************
 using System;
 using System.Globalization;
@@ -11,10 +11,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using SimulationBancomat.Display;
 using SimulationBancomat.Features;
-using static SimulationBancomat.Display.SuperConsole;
-using static SimulationBancomat.Display.Menu;
-using static SimulationBancomat.Features.Transactions;
-using static SimulationBancomat.Features.Verifications;
 
 namespace SimulationBancomat
 {
@@ -41,13 +37,14 @@ namespace SimulationBancomat
             Verifications verification = new Verifications();
             Menu menu = new Menu();
             Transactions transaction = new Transactions();
-            Account account = new Account();
+            Account account = new Account(1000);
+
             console.Presentation();
             console.DrawNumPad(console.emptyButton, verification.keyChar);
             verification.Code(console, data, console.emptyButton, verification.keyChar);
 
             console.Presentation();
-            menu.Choice(console, transaction, account, ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions);
+            menu.Choice(console, transaction, account, account.BankMoneyAmount, transaction.moneyLogs, transaction.MoneyOptions);
 
             Console.ReadLine();
         }

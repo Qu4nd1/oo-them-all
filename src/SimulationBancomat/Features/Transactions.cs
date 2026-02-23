@@ -12,12 +12,13 @@ using System.Text;
 using System.Threading.Tasks;
 using SimulationBancomat.Features;
 using static SimulationBancomat.Program;
+using System.Transactions;
 
 namespace SimulationBancomat.Features
 {
     class Transactions
     {
-        private decimal[] getOutAmountOptions = new decimal[]
+        private decimal[] amountOptions = new decimal[]
         {
             20,
             50,
@@ -25,42 +26,40 @@ namespace SimulationBancomat.Features
             100
         };
         private int customAmount = 0;
-        private int screenheigth = 16;
-        private decimal bankMoneyAmount = 1000;
-        private string[] withdrawalMoneyLogs = new string[100];
-        private string[] withdrawalMoneyOptions = new string[]
+        int screenheigth = 16;
+        public string[] moneyLogs = new string[100];
+        public string[] MoneyOptions = new string[]
         {
                 "Avec reçu",
                 "Sans reçu"
         };
-        private string showAmount = $"Solde: {bankMoneyAmount:c}";
-        private int withdrawalTimes = 0;
-        private bool moneyMovementDirection;
+        public int withdrawalTimes = 0;
+        public bool moneyMovementDirection;
+        public int moneyMovementIndex = 0;
 
-        public void MoneyMovement(ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions, ref int moneyWithdrawalIndex, bool moneyMovementDirection)
+        public void MoneyMovement(Account account, Transactions transaction, decimal BankMoneyAmount, string[] moneyLogs, string[] withdrawalMoneyOptions, ref int moneyWithdrawalIndex, bool moneyMovementDirection)
         {
-            int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - (showAmount.Length / 2));
+            int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - ($"{account.ShowAmount}".Length / 2));
 
             SuperConsole console = new SuperConsole();
             Receipt receipt = new Receipt();
 
             console.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
-            console.DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, showAmount);
+            console.DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, account.ShowAmount);
             switch (moneyMovementDirection)
             {
                 case true:
-                    PutInMoneyAmount(console, ref bankMoneyAmount, ref withdrawalMoneyLogs, ref moneyWithdrawalIndex);
+                    PutInMoneyAmount(console, account, transaction);
                     break;
                 case false:
-                    GetOutMoneyAmount(console, ref bankMoneyAmount, ref withdrawalMoneyLogs, ref moneyWithdrawalIndex);
+                    GetOutMoneyAmount(console, account, transaction);
                     break;
             }
-            showAmount = $"Solde: {bankMoneyAmount:c}";
             console.Presentation();
             console.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth - 8);
-            receipt.Print(console, ref withdrawalMoneyLogs, moneyWithdrawalIndex);
+            receipt.Print(console, account, transaction);
         }
-        public void GetOutMoneyAmount(SuperConsole console, ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, ref int moneyWithdrawalIndex)
+        void GetOutMoneyAmount(SuperConsole console, Account account, Transactions transaction)
         {
             int moneyPosX = PasswordData.PASSWORD_SCREEN_X - 12;
             int moneyPosY = PasswordData.PASSWORD_SCREEN_Y;
@@ -82,24 +81,24 @@ namespace SimulationBancomat.Features
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
             Console.WriteLine("Veuillez sélectionner la quantité d'argent a retirer :");
 
-            for (int i = 0; i < getOutAmountOptions.Length + 1; i++)
+            for (int i = 0; i < amountOptions.Length + 1; i++)
             {
 
-                if (i <= (getOutAmountOptions.Length + 1) / 2)
+                if (i <= (amountOptions.Length + 1) / 2)
                 {
-                    if (i <= getOutAmountOptions.Length)
+                    if (i <= amountOptions.Length)
                     {
                         Console.SetCursorPosition(writePosX, moneyPosY + shiftY);
-                        Console.WriteLine($"\t{i + 1}: {getOutAmountOptions[i]:c}");
+                        Console.WriteLine($"\t{i + 1}: {amountOptions[i]:c}");
                     }
 
                 }
                 else
                 {
-                    if (i < getOutAmountOptions.Length)
+                    if (i < amountOptions.Length)
                     {
                         Console.SetCursorPosition(writePosX, moneyPosY + shiftY);
-                        Console.WriteLine($"{i + 1}: {getOutAmountOptions[i]:c}");
+                        Console.WriteLine($"{i + 1}: {amountOptions[i]:c}");
                     }
                     else
                     {
@@ -108,7 +107,7 @@ namespace SimulationBancomat.Features
                     }
                 }
                 shiftY += 2;
-                if (i == (getOutAmountOptions.Length) / 2)
+                if (i == (amountOptions.Length) / 2)
                 {
                     writePosX += shiftX;
                     shiftY = 2;
@@ -121,7 +120,7 @@ namespace SimulationBancomat.Features
 
                 if (char.IsDigit(keyChar))
                 { 
-                    customAmountIndex = Convert.ToString(getOutAmountOptions.Length + 1);
+                    customAmountIndex = Convert.ToString(amountOptions.Length + 1);
                     keyValidity = true;
                     withdrawalTimes++;
 
@@ -144,7 +143,7 @@ namespace SimulationBancomat.Features
                                 }
                             } while (keyValidity != true);
 
-                            if (customAmount > bankMoneyAmount)
+                            if (customAmount > account.BankMoneyAmount)
                             {
                                 customGetOutAmountValidity = false;
                                 
@@ -153,17 +152,17 @@ namespace SimulationBancomat.Features
                             else
                                 customGetOutAmountValidity = true;
                         } while (customGetOutAmountValidity != true);
-                        bankMoneyAmount = bankMoneyAmount - customAmount;
-                        withdrawalMoneyLogs[moneyWithdrawalIndex] = $"- {customAmount:c}";
-                        moneyWithdrawalIndex++;
+                        account.Withdraw(customAmount);
+                        transaction.moneyLogs[moneyMovementIndex] = $"- {customAmount:c}";
+                        moneyMovementIndex++;
                     }
                     else if (keyChar.ToString() == "1" || keyChar.ToString() == "2" || keyChar.ToString() == "3" || keyChar.ToString() == "4")
                     {
                         amountIndex = Convert.ToInt32(keyChar.ToString());
                         amountIndex -= 1;
-                        bankMoneyAmount = bankMoneyAmount - getOutAmountOptions[amountIndex];
-                        withdrawalMoneyLogs[moneyWithdrawalIndex] = $"- {getOutAmountOptions[amountIndex]:c}";
-                        moneyWithdrawalIndex++;
+                        account.Withdraw(amountOptions[amountIndex]);
+                        transaction.moneyLogs[moneyMovementIndex] = $"- {amountOptions[amountIndex]:c}";
+                        moneyMovementIndex++;
                     }
                     else
                     {
@@ -179,7 +178,7 @@ namespace SimulationBancomat.Features
                 Console.CursorVisible = false;
             } while (keyValidity != true);
         }
-       public void PutInMoneyAmount(SuperConsole console, ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, ref int moneyWithdrawalIndex)
+       void PutInMoneyAmount(SuperConsole console, Account account, Transactions transaction)
         {
             int moneyPosX = PasswordData.PASSWORD_SCREEN_X - 12;
             int moneyPosY = PasswordData.PASSWORD_SCREEN_Y;
@@ -198,24 +197,24 @@ namespace SimulationBancomat.Features
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
             Console.WriteLine("Veuillez sélectionner la quantité d'argent a déposer :");
 
-            for (int i = 0; i < getOutAmountOptions.Length + 1; i++)
+            for (int i = 0; i < amountOptions.Length + 1; i++)
             {
 
-                if (i <= (getOutAmountOptions.Length + 1) / 2)
+                if (i <= (amountOptions.Length + 1) / 2)
                 {
-                    if (i <= getOutAmountOptions.Length)
+                    if (i <= amountOptions.Length)
                     {
                         Console.SetCursorPosition(writePosX, moneyPosY + shiftY);
-                        Console.WriteLine($"\t{i + 1}: {getOutAmountOptions[i]:c}");
+                        Console.WriteLine($"\t{i + 1}: {amountOptions[i]:c}");
                     }
 
                 }
                 else
                 {
-                    if (i < getOutAmountOptions.Length)
+                    if (i < amountOptions.Length)
                     {
                         Console.SetCursorPosition(writePosX, moneyPosY + shiftY);
-                        Console.WriteLine($"{i + 1}: {getOutAmountOptions[i]:c}");
+                        Console.WriteLine($"{i + 1}: {amountOptions[i]:c}");
                     }
                     else
                     {
@@ -224,7 +223,7 @@ namespace SimulationBancomat.Features
                     }
                 }
                 shiftY += 2;
-                if (i == (getOutAmountOptions.Length) / 2)
+                if (i == (amountOptions.Length) / 2)
                 {
                     writePosX += shiftX;
                     shiftY = 2;
@@ -239,7 +238,7 @@ namespace SimulationBancomat.Features
                 if (char.IsDigit(keyChar))
                 {
 
-                    customAmountIndex = Convert.ToString(getOutAmountOptions.Length + 1);
+                    customAmountIndex = Convert.ToString(amountOptions.Length + 1);
                     keyValidity = true;
 
 
@@ -260,18 +259,18 @@ namespace SimulationBancomat.Features
                                     console.ClearAt((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length + i, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
                             }
                         } while (keyValidity != true);
-                        
-                        bankMoneyAmount = bankMoneyAmount + customAmount;
-                        withdrawalMoneyLogs[moneyWithdrawalIndex] = $"+ {customAmount:c}";
-                        moneyWithdrawalIndex++;
+                        account.Deposit(customAmount);
+                        transaction.moneyLogs[moneyMovementIndex] = $"+ {customAmount:c}";
+                        moneyMovementIndex++;
                     }
+                    //deposit
                     else if (keyChar.ToString() == "1" || keyChar.ToString() == "2" || keyChar.ToString() == "3" || keyChar.ToString() == "4")
                     {
                         amountIndex = Convert.ToInt32(keyChar.ToString());
                         amountIndex -= 1;
-                        bankMoneyAmount = bankMoneyAmount + getOutAmountOptions[amountIndex];
-                        withdrawalMoneyLogs[moneyWithdrawalIndex] = $"+ {getOutAmountOptions[amountIndex]:c}";
-                        moneyWithdrawalIndex++;
+                        account.Deposit(amountOptions[amountIndex]);
+                        transaction.moneyLogs[moneyMovementIndex] = $"+ {amountOptions[amountIndex]:c}";
+                        moneyMovementIndex++;
                     }
                     else
                     {

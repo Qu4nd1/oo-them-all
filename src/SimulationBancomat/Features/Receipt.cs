@@ -11,28 +11,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static SimulationBancomat.Program;
-using static SimulationBancomat.Features.Transactions;
 
 namespace SimulationBancomat.Features
 {
     class Receipt
     {
-        public void Print(SuperConsole console, ref string[] withdrawalMoneyLogs, int moneyWithdrawalIndex)
+        public void Print(SuperConsole console, Account account, Transactions transaction)
         {
             int optionPosX = PasswordData.PASSWORD_SCREEN_X - 15;
             int optionPosY = PasswordData.PASSWORD_SCREEN_Y;
-            int shift = withdrawalMoneyOptions[0].Length;
-            int centerWritingSolde = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - (showAmount.Length / 2));
+            int shift = transaction.MoneyOptions[0].Length;
+            int centerWritingSolde = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - ($"{account.ShowAmount}".Length / 2));
             char keyChar;
-            int receiptHeigth =withdrawalTimes * (2) + 5;
+            int receiptHeigth = transaction.withdrawalTimes * (2) + 5;
 
             
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y + 1);
             Console.WriteLine("Veuillez sélectionner une option: ");
-            for (int i = 0; i < withdrawalMoneyOptions.Length; i++)
+            for (int i = 0; i < transaction.MoneyOptions.Length; i++)
             {
                 Console.SetCursorPosition(optionPosX, optionPosY + 3);
-                Console.WriteLine($"{i + 1}. {withdrawalMoneyOptions[i]}");
+                Console.WriteLine($"{i + 1}. {transaction.MoneyOptions[i]}");
                 optionPosX += (shift + 5);
             }
             do
@@ -47,16 +46,16 @@ namespace SimulationBancomat.Features
 
                         console.Presentation();
                         console.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y - 1, screenWidth, receiptHeigth);
-                        console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{showAmount}");
-                        for (int i = 0; i < moneyWithdrawalIndex; i++)
+                        console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{account.ShowAmount}");
+                        for (int i = 0; i < transaction.moneyMovementIndex; i++)
                         {
                             if (i == 0)
                             {
-                                console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 2)), screenWidth, $"{withdrawalMoneyLogs[i]:c}");
+                                console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 2)), screenWidth, $"{transaction.moneyLogs[i]:c}");
                             }
                             else
                             {
-                                console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 2)), screenWidth, $"{withdrawalMoneyLogs[i]:c}");
+                                console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, (PasswordData.PASSWORD_SCREEN_Y + 2 + (i * 2)), screenWidth, $"{transaction.moneyLogs[i]:c}");
                             }
                         }
                         console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, ((PasswordData.PASSWORD_SCREEN_Y - 1) + (receiptHeigth - 2)), screenWidth, "Appuyer sur 'Q' pour revenir au menu des options");

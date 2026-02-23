@@ -23,25 +23,44 @@ namespace SimulationBancomat.Features
             {
                 return this.bankMoneyAmount;
             }
+            /*
             set 
             {
                 if (value > 0 && value < this.bankMoneyAmount)
                     this.bankMoneyAmount = this.bankMoneyAmount - value;
                 else
                 {
-                    MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {this.bankMoneyAmount:c}", "Erreur", 16);
+                    
                 }
             }
+            */
         }
+
+        public void Deposit(decimal value)
+        {
+            bankMoneyAmount = bankMoneyAmount + value;
+        }
+
+        public void Withdraw(decimal value)
+        {
+            if (value > 0 || value < bankMoneyAmount)
+                bankMoneyAmount = bankMoneyAmount - value;
+            else
+                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {this.bankMoneyAmount:c}", "Erreur", 16);
+        }
+
         private string showAmount;
         public string ShowAmount
         {
             get
             {
-                return this.showAmount;
+                return $"Solde: {bankMoneyAmount:c}";
             }
         }
-
+        public Account(int moneyAmount)
+        {
+            this.bankMoneyAmount = moneyAmount;
+        }
         public void Show(decimal bankMoneyAmount)
         {
             string showAmount = $"Solde: {bankMoneyAmount:c}";

@@ -18,7 +18,7 @@ namespace SimulationBancomat.Display
     class Menu
     {
 
-        public void Choice(SuperConsole console, Transactions transaction, Account account, ref decimal bankMoneyAmount, ref string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
+        public void Choice(SuperConsole console, Transactions transaction, Account account, decimal bankMoneyAmount, string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
         {
             char keyChar;
             bool keyValidity = false;
@@ -56,12 +56,12 @@ namespace SimulationBancomat.Display
                     {
                         case '1':
                             console.Presentation();
-                            transaction.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,true);
+                            transaction.MoneyMovement(account, transaction, account.BankMoneyAmount, withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,true);
                             transactionsFinished = false;
                             break;
                         case '2':
                             console.Presentation();
-                            transaction.MoneyMovement(ref bankMoneyAmount, ref withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,false);
+                            transaction.MoneyMovement(account, transaction, account.BankMoneyAmount, withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,false);
                             transactionsFinished = false;
                             break;
                         case '3':
