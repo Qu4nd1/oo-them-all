@@ -1,4 +1,10 @@
-﻿using System;
+﻿//******************************************************************************************
+// ETML
+// Auteur : Kentin Fankhauser
+// Date : 23/02/2026
+// Description : Programme principal
+//******************************************************************************************
+using System;
 using System.Globalization;
 using System.Numerics;
 using System.Runtime.InteropServices;

@@ -1,4 +1,10 @@
-﻿using SimulationBancomat.Display;
+﻿//******************************************************************************************
+// ETML
+// Auteur : Kentin Fankhauser
+// Date : 23/02/2026
+// Description : Visualisation du compte client et modification si nécessaire
+//******************************************************************************************
+using SimulationBancomat.Display;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +42,7 @@ namespace SimulationBancomat.Features
             }
         }
 
-        public void See(decimal bankMoneyAmount)
+        public void Show(decimal bankMoneyAmount)
         {
             string showAmount = $"Solde: {bankMoneyAmount:c}";
             int screenheigth = 5;

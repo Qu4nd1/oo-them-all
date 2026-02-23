@@ -1,4 +1,10 @@
-﻿using System;
+﻿//******************************************************************************************
+// ETML
+// Auteur : Kentin Fankhauser
+// Date : 23/02/2026
+// Description : Affichage général pour le programme
+//******************************************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

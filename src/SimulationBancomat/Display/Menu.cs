@@ -1,4 +1,10 @@
-﻿using System;
+﻿//******************************************************************************************
+// ETML
+// Auteur : Kentin Fankhauser
+// Date : 23/02/2026
+// Description : Menu de choix avec redirection vers les différentes options
+//******************************************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,7 +66,7 @@ namespace SimulationBancomat.Display
                             break;
                         case '3':
                             console.Presentation();
-                            account.See(bankMoneyAmount);
+                            account.Show(bankMoneyAmount);
                             transactionsFinished = false;
                             break;
                         case '4':

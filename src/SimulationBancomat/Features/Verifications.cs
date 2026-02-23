@@ -1,4 +1,10 @@
-﻿using SimulationBancomat.Display;
+﻿//******************************************************************************************
+// ETML
+// Auteur : Kentin Fankhauser
+// Date : 23/02/2026
+// Description : Regroupement des différents tests nécessaires au programme
+//******************************************************************************************
+using SimulationBancomat.Display;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,10 @@
-﻿using SimulationBancomat.Display;
+﻿//******************************************************************************************
+// ETML
+// Auteur : Kentin Fnakhauser
+// Date : 23/02/2026
+// Description : Retrait ou Dépot d'argent
+//******************************************************************************************
+using SimulationBancomat.Display;
 using System;
 using System.Collections.Generic;
 using System.Linq;
