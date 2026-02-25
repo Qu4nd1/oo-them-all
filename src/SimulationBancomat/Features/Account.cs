@@ -11,37 +11,26 @@ namespace SimulationBancomat.Features
 {
     class Account
     {
-        private decimal bankMoneyAmount;
-        public decimal BankMoneyAmount
+        private decimal _bankMoneyAmount;
+        public decimal bankMoneyAmount
         {
             get
             {
-                return this.bankMoneyAmount;
+                return this._bankMoneyAmount;
             }
-            /*
-            set 
-            {
-                if (value > 0 && value < this.bankMoneyAmount)
-                    this.bankMoneyAmount = this.bankMoneyAmount - value;
-                else
-                {
-                    
-                }
-            }
-            */
         }
 
         public void Deposit(decimal value)
         {
-            bankMoneyAmount = bankMoneyAmount + value;
+            _bankMoneyAmount = _bankMoneyAmount + value;
         }
 
         public void Withdraw(decimal value)
         {
-            if (value > 0 || value < bankMoneyAmount)
-                bankMoneyAmount = bankMoneyAmount - value;
+            if (value > 0 || value < _bankMoneyAmount)
+                _bankMoneyAmount = _bankMoneyAmount - value;
             else
-                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {this.bankMoneyAmount:c}", "Erreur", 16);
+                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {this._bankMoneyAmount:c}", "Erreur", 16);
         }
 
         private string showAmount;
@@ -49,16 +38,16 @@ namespace SimulationBancomat.Features
         {
             get
             {
-                return $"Solde: {bankMoneyAmount:c}";
+                return $"Solde: {_bankMoneyAmount:c}";
             }
         }
         public Account(int moneyAmount)
         {
-            this.bankMoneyAmount = moneyAmount;
+            this._bankMoneyAmount = moneyAmount;
         }
         public void Show()
         {
-            string showAmount = $"Solde: {bankMoneyAmount:c}";
+            string showAmount = $"Solde: {_bankMoneyAmount:c}";
             int screenheigth = 5;
             int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - (showAmount.Length / 2));
             char keyChar;

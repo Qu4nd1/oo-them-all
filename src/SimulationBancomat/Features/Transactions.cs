@@ -136,7 +136,7 @@ namespace SimulationBancomat.Features
                                 }
                             } while (keyValidity != true);
 
-                            if (customAmount > account.BankMoneyAmount)
+                            if (customAmount > account.bankMoneyAmount)
                             {
                                 customGetOutAmountValidity = false;
                                 
