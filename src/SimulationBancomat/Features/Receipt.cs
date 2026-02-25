@@ -16,7 +16,7 @@ namespace SimulationBancomat.Features
             int optionPosX = PasswordData.PASSWORD_SCREEN_X - 15;
             int optionPosY = PasswordData.PASSWORD_SCREEN_Y;
             int shift = transaction.MoneyOptions[0].Length;
-            int centerWritingSolde = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - ($"{account.ShowAmount}".Length / 2));
+            int centerWritingSolde = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - ($"{account.AmountFormatted}".Length / 2));
             char keyChar;
             int receiptHeigth = transaction.withdrawalTimes * (2) + 5;
 
@@ -41,7 +41,7 @@ namespace SimulationBancomat.Features
 
                         console.Presentation();
                         console.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y - 1, screenWidth, receiptHeigth);
-                        console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{account.ShowAmount}");
+                        console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 17, PasswordData.PASSWORD_SCREEN_Y, screenWidth, $"{account.AmountFormatted}");
                         for (int i = 0; i < transaction.moneyMovementIndex; i++)
                         {
                             if (i == 0)
