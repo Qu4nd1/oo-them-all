@@ -4,11 +4,8 @@
 // Date : 23/02/2026
 // Description : Simulation qui reproduit l'interface d'un bancomat sans pour autant traiter de l'argent réel
 //******************************************************************************************
-using System;
 using System.Globalization;
-using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Text;
 using SimulationBancomat.Display;
 using SimulationBancomat.Features;
 
@@ -41,10 +38,10 @@ namespace SimulationBancomat
 
             console.Presentation();
             console.DrawNumPad(console.emptyButton, verification.keyChar);
-            verification.Code(console, data, console.emptyButton, verification.keyChar);
+            verification.Code(console, data, console.emptyButton);
 
             console.Presentation();
-            menu.Choice(console, transaction, account, account.BankMoneyAmount, transaction.moneyLogs, transaction.MoneyOptions);
+            menu.Choice(console, transaction, account);
 
             Console.ReadLine();
         }

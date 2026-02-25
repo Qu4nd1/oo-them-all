@@ -5,11 +5,6 @@
 // Description : Affichage du reçu des transactions effectuées
 //******************************************************************************************
 using SimulationBancomat.Display;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Features

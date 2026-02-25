@@ -4,12 +4,6 @@
 // Date : 23/02/2026
 // Description : Menu de choix avec redirection vers les différentes options
 //******************************************************************************************
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimulationBancomat;
 using SimulationBancomat.Features;
 using static SimulationBancomat.Program;
 
@@ -18,13 +12,12 @@ namespace SimulationBancomat.Display
     class Menu
     {
 
-        public void Choice(SuperConsole console, Transactions transaction, Account account, decimal bankMoneyAmount, string[] withdrawalMoneyLogs, string[] withdrawalMoneyOptions)
+        public void Choice(SuperConsole console, Transactions transaction, Account account)
         {
             char keyChar;
             bool keyValidity = false;
             bool transactionsFinished = false;
             int timesDone = 0;
-            int moneyWithdrawalIndex = 0;
             string[] bancomatOptions = new string[]
             {
                 "Deposer de l'argent",
@@ -56,17 +49,17 @@ namespace SimulationBancomat.Display
                     {
                         case '1':
                             console.Presentation();
-                            transaction.MoneyMovement(account, transaction, account.BankMoneyAmount, withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,true);
+                            transaction.MoneyMovement(account, transaction, true);
                             transactionsFinished = false;
                             break;
                         case '2':
                             console.Presentation();
-                            transaction.MoneyMovement(account, transaction, account.BankMoneyAmount, withdrawalMoneyLogs, withdrawalMoneyOptions, ref moneyWithdrawalIndex,false);
+                            transaction.MoneyMovement(account, transaction, false);
                             transactionsFinished = false;
                             break;
                         case '3':
                             console.Presentation();
-                            account.Show(bankMoneyAmount);
+                            account.Show();
                             transactionsFinished = false;
                             break;
                         case '4':

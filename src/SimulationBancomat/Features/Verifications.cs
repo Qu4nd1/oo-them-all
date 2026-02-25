@@ -5,20 +5,14 @@
 // Description : Regroupement des différents tests nécessaires au programme
 //******************************************************************************************
 using SimulationBancomat.Display;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static SimulationBancomat.Program;
-using static SimulationBancomat.Display.SuperConsole;
 
 namespace SimulationBancomat.Features
 {
     class Verifications
     {
-        public char keyChar { get; } = ' ';
-        public void Code(SuperConsole console, PasswordData data, string[] emptyButton, char keyChar)
+        public char keyChar { get; set; } = ' ';
+        public void Code(SuperConsole console, PasswordData data, string[] emptyButton)
         {
             Console.CursorVisible = true;
             string input = " ";

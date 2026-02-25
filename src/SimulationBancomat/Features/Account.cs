@@ -5,11 +5,6 @@
 // Description : Visualisation du compte client et modification si nécessaire
 //******************************************************************************************
 using SimulationBancomat.Display;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Features
@@ -61,7 +56,7 @@ namespace SimulationBancomat.Features
         {
             this.bankMoneyAmount = moneyAmount;
         }
-        public void Show(decimal bankMoneyAmount)
+        public void Show()
         {
             string showAmount = $"Solde: {bankMoneyAmount:c}";
             int screenheigth = 5;

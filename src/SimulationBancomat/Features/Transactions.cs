@@ -5,14 +5,7 @@
 // Description : Retrait ou Dépot d'argent
 //******************************************************************************************
 using SimulationBancomat.Display;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimulationBancomat.Features;
 using static SimulationBancomat.Program;
-using System.Transactions;
 
 namespace SimulationBancomat.Features
 {
@@ -37,7 +30,7 @@ namespace SimulationBancomat.Features
         public bool moneyMovementDirection;
         public int moneyMovementIndex = 0;
 
-        public void MoneyMovement(Account account, Transactions transaction, decimal BankMoneyAmount, string[] moneyLogs, string[] withdrawalMoneyOptions, ref int moneyWithdrawalIndex, bool moneyMovementDirection)
+        public void MoneyMovement(Account account, Transactions transaction, bool moneyMovementDirection)
         {
             int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - ($"{account.ShowAmount}".Length / 2));
 
@@ -188,7 +181,6 @@ namespace SimulationBancomat.Features
             int writePosY = moneyPosY;
             string customAmountIndex = "";
             string question = "Veuillez indiquer le montant a déposer: ";
-            bool customPutInAmountValidity = false;
             char keyChar;
             bool keyValidity = false;
             int amountIndex = 0;

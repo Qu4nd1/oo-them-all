@@ -4,12 +4,6 @@
 // Date : 23/02/2026
 // Description : Affichage général pour le programme
 //******************************************************************************************
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimulationBancomat;
 using SimulationBancomat.Features;
 
 namespace SimulationBancomat.Display
