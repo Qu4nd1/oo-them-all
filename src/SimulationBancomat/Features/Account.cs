@@ -16,7 +16,7 @@ namespace SimulationBancomat.Features
         {
             get
             {
-                return this._bankMoneyAmount;
+                return _bankMoneyAmount;
             }
         }
 
@@ -30,7 +30,7 @@ namespace SimulationBancomat.Features
             if (value > 0 || value < _bankMoneyAmount)
                 _bankMoneyAmount = _bankMoneyAmount - value;
             else
-                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {this._bankMoneyAmount:c}", "Erreur", 16);
+                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {_bankMoneyAmount:c}", "Erreur", 16);
         }
 
         private string showAmount;
@@ -43,7 +43,7 @@ namespace SimulationBancomat.Features
         }
         public Account(int moneyAmount)
         {
-            this._bankMoneyAmount = moneyAmount;
+            _bankMoneyAmount = moneyAmount;
         }
         public void Show()
         {

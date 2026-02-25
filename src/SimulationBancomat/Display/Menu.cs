@@ -15,9 +15,8 @@ namespace SimulationBancomat.Display
         public void Choice(SuperConsole console, Transactions transaction, Account account)
         {
             char keyChar;
-            bool keyValidity = false;
+            bool keyValidity;
             bool transactionsFinished = false;
-            int timesDone = 0;
             string[] bancomatOptions = new string[]
             {
                 "Deposer de l'argent",
@@ -74,7 +73,6 @@ namespace SimulationBancomat.Display
                     keyValidity = false;
                     MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
                 }
-                timesDone++;
                 Console.Clear();
             } while (keyValidity != true || transactionsFinished != true);
         }

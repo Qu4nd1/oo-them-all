@@ -19,7 +19,7 @@ namespace SimulationBancomat.Features
             100
         };
         private int customAmount = 0;
-        int screenheigth = 16;
+        private int screenheigth = 16;
         public string[] moneyLogs = new string[100];
         public string[] MoneyOptions = new string[]
         {
@@ -32,13 +32,13 @@ namespace SimulationBancomat.Features
 
         public void MoneyMovement(Account account, Transactions transaction, bool moneyMovementDirection)
         {
-            int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - ($"{account.ShowAmount}".Length / 2));
+            int centerWriting = (PasswordData.PASSWORD_SCREEN_X - 21) + ((62 / 2) - ($"{account.AmountFormatted}".Length / 2));
 
             SuperConsole console = new SuperConsole();
             Receipt receipt = new Receipt();
 
             console.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 21, PasswordData.PASSWORD_SCREEN_Y - 1, 62, screenheigth);
-            console.DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, account.ShowAmount);
+            console.DrawAtString(centerWriting, PasswordData.PASSWORD_SCREEN_Y, account.AmountFormatted);
             switch (moneyMovementDirection)
             {
                 case true:
@@ -59,15 +59,13 @@ namespace SimulationBancomat.Features
             int shiftX = 25;
             int writePosX = moneyPosX;
             int shiftY = 2;
-            int writePosY = moneyPosY;
-
-            string customAmountIndex = "";
+            string customAmountIndex;
             string question = "Veuillez indiquer le montant a retirer: ";
-            bool customGetOutAmountValidity = false;
+            bool customGetOutAmountValidity;
             char keyChar;
-            bool keyValidity = false;
-            int amountIndex = 0;
-            string customAmountAnswer;
+            bool keyValidity;
+            int amountIndex;
+            string? customAmountAnswer;
 
             Console.CursorVisible = false;
 
@@ -132,7 +130,7 @@ namespace SimulationBancomat.Features
                                 if (keyValidity == false)
                                 {
                                     MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
-                                    console.ClearAtForLength((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2), customAmountAnswer.Length);
+                                    console.ClearAtForLength((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2), customAmountAnswer!.Length);
                                 }
                             } while (keyValidity != true);
 
@@ -178,13 +176,12 @@ namespace SimulationBancomat.Features
             int shiftX = 25;
             int writePosX = moneyPosX;
             int shiftY = 2;
-            int writePosY = moneyPosY;
-            string customAmountIndex = "";
+            string customAmountIndex;
             string question = "Veuillez indiquer le montant a déposer: ";
             char keyChar;
-            bool keyValidity = false;
-            int amountIndex = 0;
-            string customAmountAnswer;
+            bool keyValidity;
+            int amountIndex;
+            string? customAmountAnswer;
 
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 19, PasswordData.PASSWORD_SCREEN_Y);
             Console.WriteLine("Veuillez sélectionner la quantité d'argent a déposer :");
@@ -247,7 +244,7 @@ namespace SimulationBancomat.Features
                             if (keyValidity == false)
                             {
                                 MessageBox(IntPtr.Zero, "La valeur attendue est un entier", "Erreur", 16);
-                                for (int i = 0; i < customAmountAnswer.Length; i++)
+                                for (int i = 0; i < customAmountAnswer!.Length; i++)
                                     console.ClearAt((PasswordData.PASSWORD_SCREEN_X - 19) + question.Length + i, PasswordData.PASSWORD_SCREEN_Y - 2 + (screenheigth - 2));
                             }
                         } while (keyValidity != true);
