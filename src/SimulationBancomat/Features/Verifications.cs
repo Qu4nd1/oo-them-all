@@ -46,7 +46,7 @@ namespace SimulationBancomat.Features
                 }
                 // Après la boucle, vérifier le mot de passe complet
                 data.passwordValidity = int.TryParse(input, out data.tempPassword);
-                if (data.tempPassword == data.password)
+                if (data.tempPassword == data.Password)
                 {
                     data.passwordValidity = true;
                 }
@@ -62,19 +62,40 @@ namespace SimulationBancomat.Features
     }
     class PasswordData
     {
-            public bool passwordValidity;
-            public int password;
-            public int tempPassword;
-            public const int PASSWORD_SCREEN_X = 40;
-            public const int PASSWORD_SCREEN_Y = 16;
-            public const int PASSWORD_LENGTH = 6;
+        private bool _passwordValidity;
+        // En reflexion par rapport au ligne 48 a 60 de la classe verifications
+        public bool PasswordValidity
+        {
+            get {return _passwordValidity;}
+            set {
+                if (tempPassword == _password)
+                    _passwordValidity = true;
+                else
+                {
+                    _passwordValidity = false;
+                    tempPassword = 0;
 
-            // Constructeur
-            public PasswordData(bool validity, int pwd, int tempPwd)
-            {
-                passwordValidity = validity;
-                password = pwd;
-                tempPassword = tempPwd;
-            }
+                    MessageBox(IntPtr.Zero, "Code incorrect", "Erreur", 16);
+                }
+                    
+                }
+        }
+        private int _password;
+        public int Password
+        {
+            get {return _password;}
+        }
+        public int tempPassword;
+        public const int PASSWORD_SCREEN_X = 40;
+        public const int PASSWORD_SCREEN_Y = 16;
+        public const int PASSWORD_LENGTH = 6;
+
+        // Constructeur
+        public PasswordData(bool validity, int pwd, int tempPwd)
+        {
+            passwordValidity = validity;
+            _password = pwd;
+            tempPassword = tempPwd;
+        }
     }
 }

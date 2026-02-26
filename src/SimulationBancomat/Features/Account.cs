@@ -12,7 +12,7 @@ namespace SimulationBancomat.Features
     class Account
     {
         private decimal _bankMoneyAmount;
-        public decimal bankMoneyAmount
+        public decimal BankMoneyAmount
         {
             get
             {
