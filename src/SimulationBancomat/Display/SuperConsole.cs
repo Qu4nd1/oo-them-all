@@ -8,7 +8,7 @@ using SimulationBancomat.Features;
 
 namespace SimulationBancomat.Display
 {
-    class SuperConsole
+    public class SuperConsole
     {
         public int initialButtonX = PasswordData.PASSWORD_SCREEN_X - 1;
         public int initalButtonY = PasswordData.PASSWORD_SCREEN_Y + 3;
@@ -145,6 +145,7 @@ namespace SimulationBancomat.Display
         }
         public void Presentation()
         {
+            string phrase = $"Bienvenue à la banque Raiffeisen";
             Console.Clear();
             Console.WriteLine(@"
                                ____    _    _   _  ___  _   _ _____ 
@@ -160,7 +161,7 @@ namespace SimulationBancomat.Display
                     |_| \_/_/   \_\__|_|   |_|   |_____|___|____/|_____|_| \_|
             ");
             Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 7, PasswordData.PASSWORD_SCREEN_Y - 2);
-            Console.WriteLine("Bienvenue à la banque Raiffeisen");
+            Console.WriteLine(phrase);
         }
         public void ClearAtForLength(int x, int y, int length)
         {

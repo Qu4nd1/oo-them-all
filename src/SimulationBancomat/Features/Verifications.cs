@@ -45,57 +45,32 @@ namespace SimulationBancomat.Features
                     }
                 }
                 // Après la boucle, vérifier le mot de passe complet
-                data.passwordValidity = int.TryParse(input, out data.tempPassword);
-                if (data.tempPassword == data.Password)
-                {
-                    data.passwordValidity = true;
-                }
-                else
-                {
-                    data.passwordValidity = false;
-                    input = "";
-                    data.tempPassword = 0;
-                    MessageBox(IntPtr.Zero, "Code incorrect", "Erreur", 16);
-                }
-            } while (data.passwordValidity == false);
+                
+            } while (!data.PasswordMatches(input));
         }
     }
     class PasswordData
     {
-        private bool _passwordValidity;
-        // En reflexion par rapport au ligne 48 a 60 de la classe verifications
-        public bool PasswordValidity
-        {
-            get {return _passwordValidity;}
-            set {
-                if (tempPassword == _password)
-                    _passwordValidity = true;
-                else
-                {
-                    _passwordValidity = false;
-                    tempPassword = 0;
-
-                    MessageBox(IntPtr.Zero, "Code incorrect", "Erreur", 16);
-                }
-                    
-                }
-        }
         private int _password;
-        public int Password
-        {
-            get {return _password;}
-        }
-        public int tempPassword;
+        
         public const int PASSWORD_SCREEN_X = 40;
         public const int PASSWORD_SCREEN_Y = 16;
         public const int PASSWORD_LENGTH = 6;
 
         // Constructeur
-        public PasswordData(bool validity, int pwd, int tempPwd)
+        public PasswordData(int pwd)
         {
-            passwordValidity = validity;
             _password = pwd;
-            tempPassword = tempPwd;
+        }
+
+        public bool PasswordMatches(string passwordCandidate)
+        {
+            if (int.TryParse(passwordCandidate, out int passwordCandidateInt))
+            {
+                return passwordCandidateInt==_password;
+            }
+
+            return false;
         }
     }
 }

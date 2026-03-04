@@ -9,7 +9,7 @@ using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Features
 {
-    class Account
+    public class Account
     {
         private decimal _bankMoneyAmount;
         public decimal BankMoneyAmount
@@ -20,6 +20,28 @@ namespace SimulationBancomat.Features
             }
         }
 
+        public string OwnerType
+        {
+            get {return _ownerType;}
+            set {
+                if (value.ToUpper() == "CHILD")
+                    _ownerType = value.ToUpper();
+                else if (value.ToUpper() == "TEENAGER")
+                    _ownerType = value.ToUpper();
+                else if (value.ToUpper() == "ADULT")
+                    _ownerType = value.ToUpper();
+                else
+                {
+                    MessageBox(IntPtr.Zero, $"Votre choix de compte ne correspond pas aux choix possible !", "Erreur", 16);
+                    _ownerType = "INVALID";
+                }
+            }
+        }
+        private string _ownerType;
+
+        public string OwnerName;
+        private string _ownerName;
+        
         public void Deposit(decimal value)
         {
             _bankMoneyAmount = _bankMoneyAmount + value;
@@ -41,8 +63,10 @@ namespace SimulationBancomat.Features
                 return $"Solde: {_bankMoneyAmount:c}";
             }
         }
-        public Account(int moneyAmount)
+        public Account(string ownerType, string ownerName, int moneyAmount)
         {
+            _ownerType = ownerType;
+            _ownerName = ownerName;
             _bankMoneyAmount = moneyAmount;
         }
         public void Show()
