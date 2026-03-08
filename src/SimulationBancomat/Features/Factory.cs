@@ -1,4 +1,4 @@
-﻿using SimulationBancomat.Display;
+using SimulationBancomat.Display;
 
 namespace SimulationBancomat.Features;
 
@@ -8,17 +8,17 @@ public static class Factory
 
     public static int MaxChildWithdrawal
     {
-        get {return _maxChildWithdrawal;}
+        get { return _maxChildWithdrawal; }
     }
     private static int _maxTeenagerWithdrawal = 5000;
     public static int MaxTeenagerWithdrawal
     {
-        get {return _maxTeenagerWithdrawal;}
+        get { return _maxTeenagerWithdrawal; }
     }
     private static int _maxAdultWithdrawal = 50000;
     public static int MaxAdultWithdrawal
     {
-        get {return _maxAdultWithdrawal;}
+        get { return _maxAdultWithdrawal; }
     }
     public static string[] AccountInformation = new string[10];
     public static bool IsNotValid
@@ -27,18 +27,20 @@ public static class Factory
         {
             if (AccountInformation[0].ToUpper() != "CHILD")
                 return true;
-            else if(AccountInformation[0].ToUpper() != "TEENAGER")
+            else if (AccountInformation[0].ToUpper() != "TEENAGER")
                 return true;
-            else if(AccountInformation[0].ToUpper() != "ADULT")
+            else if (AccountInformation[0].ToUpper() != "ADULT")
                 return true;
-            else 
+            else
                 return false;
         }
     }
-    
+
     public static Account CreateAccount(SuperConsole console)
     {
         int startAmount;
+        Console.CursorVisible = false;
+
         do
         {
             console.Presentation();
@@ -55,7 +57,7 @@ public static class Factory
             Console.Write("Amount: ");
             startAmount = Convert.ToInt32(Console.ReadLine());
             Console.Clear();
-        }while(!IsNotValid);
+        } while (!IsNotValid);
         Account account = new Account(AccountInformation[0], AccountInformation[1], startAmount);
         return account;
     }

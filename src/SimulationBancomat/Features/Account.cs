@@ -11,12 +11,12 @@ namespace SimulationBancomat.Features
 {
     public class Account
     {
-        private decimal _bankMoneyAmount;
+        protected decimal bankMoneyAmount;
         public decimal BankMoneyAmount
         {
             get
             {
-                return _bankMoneyAmount;
+                return bankMoneyAmount;
             }
         }
 
@@ -42,17 +42,17 @@ namespace SimulationBancomat.Features
         public string OwnerName;
         private string _ownerName;
         
-        public void Deposit(decimal value)
+        public virtual void Deposit(decimal value)
         {
-            _bankMoneyAmount = _bankMoneyAmount + value;
+            bankMoneyAmount = bankMoneyAmount + value;
         }
 
-        public void Withdraw(decimal value)
+        public virtual void Withdraw(decimal value)
         {
-            if (value > 0 || value < _bankMoneyAmount)
-                _bankMoneyAmount = _bankMoneyAmount - value;
+            if (value > 0 || value < bankMoneyAmount)
+                bankMoneyAmount = bankMoneyAmount - value;
             else
-                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {_bankMoneyAmount:c}", "Erreur", 16);
+                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {bankMoneyAmount:c}", "Erreur", 16);
         }
 
         
@@ -60,14 +60,14 @@ namespace SimulationBancomat.Features
         {
             get
             {
-                return $"Solde: {_bankMoneyAmount:c}";
+                return $"Solde: {bankMoneyAmount:c}";
             }
         }
         public Account(string ownerType, string ownerName, int moneyAmount)
         {
             _ownerType = ownerType;
             _ownerName = ownerName;
-            _bankMoneyAmount = moneyAmount;
+            bankMoneyAmount = moneyAmount;
         }
         public void Show()
         {
