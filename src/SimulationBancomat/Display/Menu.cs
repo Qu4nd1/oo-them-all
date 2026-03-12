@@ -11,17 +11,17 @@ namespace SimulationBancomat.Display
 {
     class Menu
     {
-        public Account AtmOpenning(SuperConsole console)
+        public Account AtmOpenning(SuperConsole console, Verifications verification)
         {
            char keyChar;
             bool keyValidity;
-            bool transactionsFinished = false;
             string[] bancomatOptions = new string[]
             {
                 "Créer un compte (compte non-eistant)",
                 "Se connecter (compte existant)"
             };
 
+            Console.CursorVisible = false;
             do
             {
                 console.Presentation();
@@ -44,10 +44,10 @@ namespace SimulationBancomat.Display
                     switch (keyChar)
                     {
                         case '1':
-                            Account accountNew = Factory.CreateAccount(console);
+                            Account accountNew = Factory.CreateAccount(console, verification);
                             return accountNew;
                         case '2':
-                            Account account = new Account("ADULT","root, root", 100000);
+                            Account account = new Account("ADULT","Kentin Fankhauser", 100000, "123456");
                             return account;
                     }
                 }
@@ -73,7 +73,7 @@ namespace SimulationBancomat.Display
                 "Consulter mon solde",
                 "Quitter"
             };
-
+            string goodbyeMessage = $"Monsieur, Madame: {account.OwnerName}";
             do
             {
                 console.Presentation();
@@ -111,9 +111,14 @@ namespace SimulationBancomat.Display
                             transactionsFinished = false;
                             break;
                         case '4':
+                            Console.Clear();
                             console.Presentation();
+                            console.ClearAtForLength(PasswordData.PASSWORD_SCREEN_X - 7, PasswordData.PASSWORD_SCREEN_Y - 2, 50);
+                            console.DrawAtCenterString(PasswordData.PASSWORD_SCREEN_X - 26, PasswordData.PASSWORD_SCREEN_Y - 2, 69, goodbyeMessage);
+                            console.GoodByeMessage();
+                            console.DrawScreen(PasswordData.PASSWORD_SCREEN_X - 26, PasswordData.PASSWORD_SCREEN_Y - 1, 69, 8);
+                            Console.ReadLine();
                             transactionsFinished = true;
-                            Environment.Exit(0);
                             break;
                     }
                 }

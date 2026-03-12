@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Features
 {
-     class Child : Account
+     public class Child : Account
     {
-        public Child(string ownerType, string ownerName, int moneyAmount) 
-            : base(ownerType, ownerName, moneyAmount)
+        public Child(string ownerType, string ownerName, int moneyAmount, string pwd) 
+            : base(ownerType, ownerName, moneyAmount, pwd)
         {
             
         }
 
+        public override void Withdraw(decimal value)
+        {
+            if (value > 0 && value < bankMoneyAmount && value < Factory.MaxChildWithdrawal)
+                bankMoneyAmount = bankMoneyAmount - value;
+            else
+                MessageBox(IntPtr.Zero, $"Vous ne pouvez pas retirer plus que: {bankMoneyAmount:c}", "Erreur", 16);
+        }
     }
 }

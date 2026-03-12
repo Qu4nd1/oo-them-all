@@ -172,5 +172,14 @@ namespace SimulationBancomat.Display
             }
             
         }
+        public void GoodByeMessage()
+        {
+            Console.SetCursorPosition(PasswordData.PASSWORD_SCREEN_X - 25, PasswordData.PASSWORD_SCREEN_Y );
+            Console.WriteLine(@"            _   _   _ ____  _______     _____ ___ ____  
+                          / \ | | | |  _ \| ____\ \   / / _ \_ _|  _ \ 
+                         / _ \| | | | |_) |  _|  \ \ / / | | | || |_) |
+                        / ___ \ |_| |  _ <| |___  \ V /| |_| | ||  _ < 
+                       /_/   \_\___/|_| \_\_____|  \_/  \___/___|_| \_\");
+        }
     }
 }

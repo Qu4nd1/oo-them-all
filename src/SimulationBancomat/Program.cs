@@ -29,14 +29,16 @@ namespace SimulationBancomat
             Thread.CurrentThread.CurrentUICulture = culture;
             //**********************************************************************************************
 
-            PasswordData data = new PasswordData(123456);
             SuperConsole console = new SuperConsole();
             Verifications verification = new Verifications();
             Menu menu = new Menu();
             Transactions transaction = new Transactions();
-            Account account = menu.AtmOpenning(console);
+            
+            Account account = menu.AtmOpenning(console, verification);
+
+            console.Presentation();
             console.DrawNumPad(console.emptyButton, verification.keyChar);
-            verification.Code(console, data, console.emptyButton);
+            verification.InputPasswordIsValid(console, account, console.emptyButton);
 
             console.Presentation();
             menu.Choice(console, transaction, account);

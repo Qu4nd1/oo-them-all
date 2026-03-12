@@ -5,12 +5,24 @@
 // Description : Visualisation du compte client et modification si nécessaire
 //******************************************************************************************
 using SimulationBancomat.Display;
+using System.Text.RegularExpressions;
 using static SimulationBancomat.Program;
 
 namespace SimulationBancomat.Features
 {
     public class Account
     {
+        public int passwordCheckCounter = 0;
+        public Account(string ownerType, string ownerName, int moneyAmount, string pwd)
+        {
+            _ownerType = ownerType;
+            _ownerName = ownerName;
+            bankMoneyAmount = moneyAmount;
+            _password = pwd;
+        }
+
+        private string _password;
+        public string Password { get { return _password; } }
         protected decimal bankMoneyAmount;
         public decimal BankMoneyAmount
         {
@@ -30,6 +42,8 @@ namespace SimulationBancomat.Features
                     _ownerType = value.ToUpper();
                 else if (value.ToUpper() == "ADULT")
                     _ownerType = value.ToUpper();
+                else if (value.ToUpper() == "ADMIN")
+                    _ownerType = value.ToUpper();
                 else
                 {
                     MessageBox(IntPtr.Zero, $"Votre choix de compte ne correspond pas aux choix possible !", "Erreur", 16);
@@ -39,10 +53,10 @@ namespace SimulationBancomat.Features
         }
         private string _ownerType;
 
-        public string OwnerName;
+        public string OwnerName { get { return _ownerName;} }
         private string _ownerName;
-        
-        public virtual void Deposit(decimal value)
+
+        public void Deposit(decimal value)
         {
             bankMoneyAmount = bankMoneyAmount + value;
         }
@@ -63,12 +77,6 @@ namespace SimulationBancomat.Features
                 return $"Solde: {bankMoneyAmount:c}";
             }
         }
-        public Account(string ownerType, string ownerName, int moneyAmount)
-        {
-            _ownerType = ownerType;
-            _ownerName = ownerName;
-            bankMoneyAmount = moneyAmount;
-        }
         public void Show()
         {
             
@@ -88,6 +96,16 @@ namespace SimulationBancomat.Features
             if (keyChar.ToString().ToUpper() == "Q")
                 return;
 
+        }
+        public bool PasswordMatches(string passwordCandidate)
+        {
+            passwordCheckCounter++;
+            if (Regex.IsMatch(passwordCandidate,@"[0-9]{6}"))
+            {
+                return passwordCandidate == _password;
+            }
+
+            return false;
         }
     }
 }
